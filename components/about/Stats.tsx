@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motionBus } from "@/lib/motionBus";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -19,11 +20,11 @@ const STATS: Stat[] = [
 export function Stats() {
   const ref = useRef<HTMLDivElement>(null);
 
+  // count-up on scroll into view
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
     const nums = el.querySelectorAll<HTMLSpanElement>("[data-num]");
 
     const ctx = gsap.context(() => {
@@ -41,16 +42,29 @@ export function Stats() {
           onUpdate: () => {
             n.textContent = String(Math.round(obj.v));
           },
-          scrollTrigger: {
-            trigger: n,
-            start: "top 85%",
-            once: true,
-          },
+          scrollTrigger: { trigger: n, start: "top 85%", once: true },
         });
       });
     }, ref);
 
     return () => ctx.revert();
+  }, []);
+
+  // velocity-coupled weight (stats participate in the scroll system)
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const nums = el.querySelectorAll<HTMLSpanElement>("[data-num]");
+    if (!nums.length) return;
+
+    const unsub = motionBus.subscribe(({ scrollVelocity }) => {
+      const v = Math.abs(scrollVelocity);
+      const weight = gsap.utils.clamp(400, 900, 500 + v * 500);
+      nums.forEach((n) => {
+        (n.parentElement as HTMLElement).style.fontVariationSettings = `"wght" ${weight}`;
+      });
+    });
+    return unsub;
   }, []);
 
   return (
@@ -67,6 +81,10 @@ export function Stats() {
               fontWeight: 500,
               letterSpacing: "-0.04em",
               lineHeight: 1,
+              fontVariationSettings: '"wght" 500',
+              transition:
+                "font-variation-settings 0.2s cubic-bezier(0.16,1,0.3,1)",
+              willChange: "font-variation-settings",
             }}
           >
             <span data-num={s.value}>0</span>

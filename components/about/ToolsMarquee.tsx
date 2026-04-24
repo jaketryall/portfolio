@@ -2,11 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { motionBus } from "@/lib/motionBus";
 
 const TOOLS = [
   "Figma",
@@ -33,7 +29,6 @@ export function ToolsMarquee() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const ctx = gsap.context(() => {
-      // base constant drift
       const base = gsap.to(track, {
         xPercent: -50,
         ease: "none",
@@ -42,21 +37,17 @@ export function ToolsMarquee() {
       });
       if (reduce) base.progress(0).pause();
 
-      // scroll-linked speed boost
-      ScrollTrigger.create({
-        trigger: ref.current,
-        start: "top bottom",
-        end: "bottom top",
-        onUpdate: (self) => {
-          const v = Math.min(Math.abs(self.getVelocity()) / 800, 4);
-          gsap.to(base, {
-            timeScale: 1 + v,
-            duration: 0.4,
-            ease: "power2.out",
-            overwrite: true,
-          });
-        },
+      // subscribe to the shared bus velocity instead of having our own reader
+      const unsub = motionBus.subscribe(({ scrollVelocity }) => {
+        const v = Math.abs(scrollVelocity) * 4;
+        gsap.to(base, {
+          timeScale: 1 + v,
+          duration: 0.4,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
       });
+      return unsub;
     }, ref);
 
     return () => ctx.revert();
@@ -78,12 +69,23 @@ export function ToolsMarquee() {
         {items.map((t, i) => (
           <span
             key={`${t}-${i}`}
-            className="flex items-center gap-10 px-10 font-sans text-ink"
+            className="flex items-center gap-10 px-10 font-sans text-ink tools-item"
             style={{
               fontSize: "clamp(2.2rem, 6vw, 5.5rem)",
               fontWeight: 500,
               letterSpacing: "-0.03em",
               lineHeight: 1,
+              fontVariationSettings: '"wght" 500',
+              transition:
+                "font-variation-settings 0.45s cubic-bezier(0.16,1,0.3,1)",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.fontVariationSettings =
+                '"wght" 900';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.fontVariationSettings =
+                '"wght" 500';
             }}
           >
             {t}

@@ -1,15 +1,11 @@
 "use client";
 
-import { forwardRef, useEffect, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import gsap from "gsap";
 import { cn } from "@/lib/utils";
+import { revealLetters, bindWeightToVelocity } from "@/lib/reveal";
+import { motionBus } from "@/lib/motionBus";
 
-/**
- * Huge ghost-name sitting behind the portrait.
- * - On initial load: each letter reveals from clip-mask with variable-weight morph (wght 180 → 500).
- * - On signature gesture (triggered via ref.kineticStorm()): each letter briefly animates to a random
- *   weight in [200..800] and settles back to the target weight — runs during the hero→about scroll.
- */
 export type HeroBackdropHandle = {
   kineticStorm: (progress: number) => void;
 };
@@ -29,50 +25,35 @@ export const HeroNameBackdrop = forwardRef<HeroBackdropHandle, Props>(
       lastP: 0,
     });
 
-    // initial reveal on mount
+    // initial reveal — uses shared reveal primitive
     useEffect(() => {
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (reduce) {
-        gsap.set(lettersRef.current, {
-          yPercent: 0,
-          opacity: 1,
-          fontWeight: 500,
-        });
-        return;
-      }
-
-      gsap.set(lettersRef.current, {
-        yPercent: 110,
-        opacity: 0,
-        fontWeight: 180,
+      const tl = revealLetters({
+        letters: lettersRef.current,
+        weightFrom: 180,
+        weightTo: 800,
+        stagger: 0.055,
+        delay: 0.15,
       });
-
-      const tl = gsap.timeline({ delay: 0.15 });
-      tl.to(lettersRef.current, {
-        yPercent: 0,
-        opacity: 1,
-        duration: 1.3,
-        ease: "expo.out",
-        stagger: { each: 0.055, from: "start" },
-      }).to(
-        lettersRef.current,
-        {
-          fontWeight: 800,
-          duration: 1.8,
-          ease: "power2.out",
-          stagger: { each: 0.04, from: "start" },
-        },
-        "<"
-      );
+      return () => {
+        tl?.kill();
+      };
     }, []);
 
-    // expose the storm fn
+    // velocity → weight flex (same signal as AboutGhost) via motion bus
     useEffect(() => {
-      if (!ref) return;
-      const handle: HeroBackdropHandle = {
-        kineticStorm: (progress) => {
-          // progress 0 → 1 during hero pin
-          // only trigger storm pulses as progress crosses 0.15, 0.4, 0.7 thresholds
+      const letters = lettersRef.current;
+      if (!letters.length) return;
+      const unsub = motionBus.subscribe(({ scrollVelocity }) => {
+        bindWeightToVelocity(letters, scrollVelocity, 800);
+      });
+      return unsub;
+    }, []);
+
+    // kinetic storm, exposed to parent (Hero) — triggered at scroll thresholds
+    useImperativeHandle(
+      ref,
+      () => ({
+        kineticStorm: (progress: number) => {
           const state = stormStateRef.current;
           const last = state.lastP;
           state.lastP = progress;
@@ -81,9 +62,7 @@ export const HeroNameBackdrop = forwardRef<HeroBackdropHandle, Props>(
             if (last < t && progress >= t && !state.running) {
               state.running = true;
               const letters = lettersRef.current;
-              const targets = letters.map(
-                () => 200 + Math.random() * 600
-              );
+              const targets = letters.map(() => 200 + Math.random() * 600);
               gsap.to(letters, {
                 fontWeight: (i: number) => targets[i],
                 duration: 0.45,
@@ -105,10 +84,9 @@ export const HeroNameBackdrop = forwardRef<HeroBackdropHandle, Props>(
             }
           }
         },
-      };
-      if (typeof ref === "function") ref(handle);
-      else ref.current = handle;
-    }, [ref]);
+      }),
+      []
+    );
 
     const renderLetters = (word: string, offset: number) =>
       Array.from(word).map((ch, i) => (
@@ -119,6 +97,7 @@ export const HeroNameBackdrop = forwardRef<HeroBackdropHandle, Props>(
           }}
           className="inline-block"
           style={{
+            color: "#e4e1d7",
             fontVariationSettings: '"wght" 800',
             willChange: "transform, font-weight, opacity",
           }}
@@ -137,7 +116,7 @@ export const HeroNameBackdrop = forwardRef<HeroBackdropHandle, Props>(
         )}
         style={{
           fontFamily: "var(--font-sans)",
-          color: "var(--color-ghost)",
+          color: "#e4e1d7",
           fontWeight: 800,
           letterSpacing: "-0.06em",
           lineHeight: 0.8,

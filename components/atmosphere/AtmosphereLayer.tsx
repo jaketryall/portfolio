@@ -2,12 +2,13 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motionBus } from "@/lib/motionBus";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
-
+/**
+ * Ambient glass shapes behind the page.
+ * Drift and scale gently with the shared bus signals — scroll progress
+ * drives parallax, velocity drives a subtle stretch. No independent loops.
+ */
 export function AtmosphereLayer() {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -17,31 +18,23 @@ export function AtmosphereLayer() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
 
-    const shapes = el.querySelectorAll<HTMLElement>("[data-shape]");
-    const ctx = gsap.context(() => {
-      shapes.forEach((shape, i) => {
-        const depth = Number(shape.dataset.depth ?? 0.3);
-        gsap.to(shape, {
-          yPercent: -30 * depth * 100,
-          ease: "none",
-          scrollTrigger: {
-            trigger: document.body,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: true,
-          },
-        });
-        gsap.to(shape, {
-          x: i % 2 === 0 ? 60 : -60,
-          duration: 12 + i * 2,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-        });
-      });
-    }, ref);
+    const shapes = Array.from(el.querySelectorAll<HTMLElement>("[data-shape]"));
 
-    return () => ctx.revert();
+    const unsub = motionBus.subscribe(
+      ({ scrollProgress, scrollVelocity, time }) => {
+        shapes.forEach((s, i) => {
+          const depth = Number(s.dataset.depth ?? 0.3);
+          const driftY = scrollProgress * -400 * depth;
+          // very slow ambient drift tied to the shared ticker (not a separate loop)
+          const driftX =
+            Math.sin(time * 0.12 + i * 1.3) * 40 * depth +
+            scrollVelocity * 60 * depth;
+          const scale = 1 + Math.abs(scrollVelocity) * 0.06 * depth;
+          s.style.transform = `translate3d(${driftX}px, ${driftY}px, 0) scale(${scale})`;
+        });
+      }
+    );
+    return unsub;
   }, []);
 
   return (
@@ -57,6 +50,7 @@ export function AtmosphereLayer() {
         style={{
           background:
             "radial-gradient(closest-side, rgba(244,242,238,0.9), rgba(244,242,238,0) 70%)",
+          willChange: "transform",
         }}
       />
       <div
@@ -65,7 +59,8 @@ export function AtmosphereLayer() {
         className="absolute top-[40%] right-[-20%] h-[60vmax] w-[60vmax] rounded-full opacity-45 blur-[100px]"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(227,220,196,0.9), rgba(227,220,196,0) 70%)",
+            "radial-gradient(closest-side, rgba(244,242,238,0.9), rgba(244,242,238,0) 70%)",
+          willChange: "transform",
         }}
       />
       <div
@@ -75,6 +70,7 @@ export function AtmosphereLayer() {
         style={{
           background:
             "radial-gradient(closest-side, rgba(244,242,238,0.7), rgba(244,242,238,0) 70%)",
+          willChange: "transform",
         }}
       />
     </div>

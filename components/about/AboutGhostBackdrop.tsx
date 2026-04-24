@@ -3,119 +3,82 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { revealLetters, bindWeightToVelocity } from "@/lib/reveal";
+import { motionBus } from "@/lib/motionBus";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
 /**
- * Ghost word "ABOUT" behind the About section — echoes the hero's JAKE/RYALL
- * backdrop using the same treatment (canvas-2 color, 800 weight, scroll-linked
- * kinetic storm). Creates motif continuity across sections.
+ * Huge "ABOUT" cradling the portrait from behind. Positioned to sit only
+ * in the portrait column area (left 5/12 of the grid), so it peeks
+ * around the portrait's edges without colliding with the copy.
  */
 export function AboutGhostBackdrop() {
   const rootRef = useRef<HTMLDivElement>(null);
+  const lettersRef = useRef<HTMLSpanElement[]>([]);
 
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const letters = root.querySelectorAll<HTMLSpanElement>("[data-letter]");
-    if (!letters.length) return;
-
-    if (reduce) {
-      gsap.set(letters, { yPercent: 0, opacity: 1 });
-      return;
-    }
-
-    gsap.set(letters, { yPercent: 110, opacity: 0, fontWeight: 180 });
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: root,
-        start: "top 85%",
-        once: true,
-      },
+    const tl = revealLetters({
+      letters: lettersRef.current,
+      weightFrom: 180,
+      weightTo: 800,
+      stagger: 0.05,
+      scrollTrigger: { trigger: root, start: "top 85%", once: true },
     });
-
-    tl.to(letters, {
-      yPercent: 0,
-      opacity: 1,
-      duration: 1.3,
-      ease: "expo.out",
-      stagger: { each: 0.04, from: "start" },
-    }).to(
-      letters,
-      {
-        fontWeight: 800,
-        duration: 1.6,
-        ease: "power2.out",
-        stagger: { each: 0.035, from: "start" },
-      },
-      "<"
-    );
-
-    // velocity pulse: letters flex their weight on scroll velocity
-    const velocityTrigger = ScrollTrigger.create({
-      trigger: root,
-      start: "top bottom",
-      end: "bottom top",
-      onUpdate: (self) => {
-        const v = Math.abs(self.getVelocity());
-        const w = gsap.utils.clamp(400, 900, 500 + v / 20);
-        gsap.to(letters, {
-          fontWeight: w,
-          duration: 0.5,
-          ease: "power3.out",
-          overwrite: true,
-        });
-      },
-      onLeave: () => {
-        gsap.to(letters, { fontWeight: 800, duration: 0.8, ease: "power3.out" });
-      },
-      onLeaveBack: () => {
-        gsap.to(letters, { fontWeight: 800, duration: 0.8, ease: "power3.out" });
-      },
-    });
-
     return () => {
-      tl.scrollTrigger?.kill();
-      tl.kill();
-      velocityTrigger.kill();
+      tl?.scrollTrigger?.kill();
+      tl?.kill();
     };
+  }, []);
+
+  useEffect(() => {
+    const letters = lettersRef.current;
+    if (!letters.length) return;
+    const unsub = motionBus.subscribe(({ scrollVelocity }) => {
+      bindWeightToVelocity(letters, scrollVelocity, 800);
+    });
+    return unsub;
   }, []);
 
   return (
     <div
       ref={rootRef}
       aria-hidden
-      className="pointer-events-none absolute inset-x-0 top-0 select-none overflow-hidden"
-      style={{ zIndex: -1 }}
+      className="pointer-events-none absolute inset-0 select-none"
+      style={{ zIndex: 0 }}
     >
-      <div
-        className="mx-auto max-w-[1600px] px-6 md:px-12 lg:px-20"
-        style={{ pointerEvents: "none" }}
-      >
+      <div className="relative mx-auto h-full max-w-[1600px]">
+        {/* Anchored to the left column width (roughly col-span-5 of a 12-col
+            grid = ~41%), with overflow hidden so letters bleed off the left
+            edge behind the portrait without crossing into the copy column. */}
         <div
-          className="text-right"
+          className="absolute top-4 left-0 overflow-hidden"
           style={{
+            width: "min(600px, 50%)",
             fontFamily: "var(--font-sans)",
-            color: "var(--color-ghost)",
+            color: "#e4e1d7",
             fontWeight: 800,
-            letterSpacing: "-0.06em",
-            lineHeight: 0.8,
-            fontSize: "clamp(6rem, 20vw, 22rem)",
+            letterSpacing: "-0.07em",
+            lineHeight: 0.85,
+            fontSize: "clamp(5rem, 12vw, 11rem)",
           }}
         >
-          <span className="block overflow-hidden">
+          <span className="block overflow-hidden whitespace-nowrap">
             {Array.from("ABOUT").map((ch, i) => (
               <span
                 key={i}
-                data-letter
+                ref={(el) => {
+                  if (el) lettersRef.current[i] = el;
+                }}
                 className="inline-block"
                 style={{
+                  color: "#e4e1d7",
                   fontVariationSettings: '"wght" 800',
-                  willChange: "transform, font-weight, opacity",
+                  willChange: "transform, font-variation-settings, opacity",
                 }}
               >
                 {ch}

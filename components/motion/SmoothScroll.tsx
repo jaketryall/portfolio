@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motionBus } from "@/lib/motionBus";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -12,7 +13,13 @@ if (typeof window !== "undefined") {
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
+
+    // Warm up the motion bus so early subscribers see valid state
+    const warm = motionBus.subscribe(() => {});
+
+    if (reduce) {
+      return () => warm();
+    }
 
     const lenis = new Lenis({
       duration: 1.1,
@@ -31,6 +38,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     gsap.ticker.lagSmoothing(0);
 
     return () => {
+      warm();
       gsap.ticker.remove(raf);
       lenis.destroy();
     };

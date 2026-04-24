@@ -1,15 +1,10 @@
 "use client";
 
-import { useEffect, useRef, type ElementType, type ReactNode } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useRef, type ElementType } from "react";
 import { cn } from "@/lib/utils";
+import { revealLetters } from "@/lib/reveal";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
-
-const NBSP = " ";
+const NBSP = " ";
 
 type RevealTextProps = {
   children: string;
@@ -40,54 +35,22 @@ export function RevealText({
     const el = ref.current;
     if (!el) return;
 
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const pieces = el.querySelectorAll<HTMLElement>(".reveal-piece");
+    const letters = Array.from(
+      el.querySelectorAll<HTMLElement>(".reveal-piece")
+    );
 
-    if (reduce) {
-      gsap.set(pieces, { yPercent: 0, opacity: 1 });
-      return;
-    }
-
-    const animateWeight =
-      typeof weightFrom === "number" && typeof weightTo === "number";
-
-    gsap.set(pieces, {
-      yPercent: 115,
-      opacity: 0,
-      ...(animateWeight
-        ? { fontVariationSettings: `"wght" ${weightFrom}` }
-        : {}),
-    });
-
-    const tl = gsap.timeline({
-      scrollTrigger: { trigger: el, start, once: true },
-      delay,
-    });
-
-    tl.to(pieces, {
-      yPercent: 0,
-      opacity: 1,
-      duration: 0.95,
-      ease: "expo.out",
+    const tl = revealLetters({
+      letters,
+      weightFrom: weightFrom ?? 500,
+      weightTo: weightTo ?? 500,
       stagger,
+      delay,
+      scrollTrigger: { trigger: el, start, once: true },
     });
-
-    if (animateWeight) {
-      tl.to(
-        pieces,
-        {
-          fontVariationSettings: `"wght" ${weightTo}`,
-          duration: 1.2,
-          ease: "power2.out",
-          stagger: stagger * 0.6,
-        },
-        "<"
-      );
-    }
 
     return () => {
-      tl.scrollTrigger?.kill();
-      tl.kill();
+      tl?.scrollTrigger?.kill();
+      tl?.kill();
     };
   }, [delay, stagger, start, weightFrom, weightTo]);
 
@@ -111,7 +74,7 @@ export function RevealText({
     </span>
   );
 
-  // char mode: group letters into non-breaking word spans so words don't wrap mid-letter
+  // char mode: group letters into non-breaking word spans
   if (splitBy === "char") {
     const words = children.split(" ");
     let running = 0;
