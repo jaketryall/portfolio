@@ -137,7 +137,7 @@ export const HeroNameBackdrop = forwardRef<HeroBackdropHandle, Props>(
         )}
         style={{
           fontFamily: "var(--font-sans)",
-          color: "var(--color-canvas-2)",
+          color: "var(--color-ghost)",
           fontWeight: 800,
           letterSpacing: "-0.06em",
           lineHeight: 0.8,

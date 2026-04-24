@@ -3,25 +3,27 @@
 import { RevealText } from "@/components/motion/RevealText";
 import { ToolsMarquee } from "./ToolsMarquee";
 import { Stats } from "./Stats";
-import { PortraitFrame } from "@/components/hero/PortraitFrame";
+import { AboutGhostBackdrop } from "./AboutGhostBackdrop";
 
 export function About() {
   return (
     <section
       id="about"
+      data-section="about"
       aria-label="About"
       className="relative px-6 pt-28 md:px-12 md:pt-40 lg:px-20"
     >
-      <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-12 md:grid-cols-12 md:gap-16">
-        {/* about photo — the morph target (hero portrait visually lands near here) */}
+      {/* echoing ghost-text motif — tied to the hero's JAKE/RYALL backdrop */}
+      <AboutGhostBackdrop />
+
+      <div className="relative mx-auto grid max-w-[1600px] grid-cols-1 gap-12 md:grid-cols-12 md:gap-16">
+        {/* portrait slot — invisible placeholder; the FloatingPortrait arrives here via scroll-morph */}
         <div className="md:col-span-5 md:col-start-1">
-          <div className="w-[min(70vw,440px)]">
-            <PortraitFrame
-              src="/images/about-source.jpg"
-              alt="Jake Ryall — candid"
-              aspect="4/5"
-            />
-          </div>
+          <div
+            data-portrait-target="about"
+            className="w-[min(70vw,440px)] aspect-4/5"
+            aria-hidden
+          />
         </div>
 
         {/* about copy */}
@@ -36,12 +38,9 @@ export function About() {
             </span>
           </div>
 
-          {/* headline — char-mode stagger with variable-weight morph (agency reveal) */}
           <h2
             className="display-black text-ink"
-            style={{
-              fontSize: "clamp(2.25rem, 4.2vw, 4rem)",
-            }}
+            style={{ fontSize: "clamp(2.25rem, 4.2vw, 4rem)" }}
           >
             <RevealText
               as="span"

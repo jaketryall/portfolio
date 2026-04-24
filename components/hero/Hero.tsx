@@ -3,8 +3,8 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { PortraitFrame } from "./PortraitFrame";
 import { HeroNameBackdrop, type HeroBackdropHandle } from "./HeroNameBackdrop";
+import { RevealText } from "@/components/motion/RevealText";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -12,12 +12,11 @@ if (typeof window !== "undefined") {
 
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const portraitRef = useRef<HTMLDivElement>(null);
-  const taglineRef = useRef<HTMLParagraphElement>(null);
+  const slotRef = useRef<HTMLDivElement>(null);
   const scrollHintRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HeroBackdropHandle>(null);
 
-  // page-load reveal
+  // orchestrated page-load cascade + kinetic storm trigger
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const section = sectionRef.current;
@@ -25,44 +24,20 @@ export function Hero() {
 
     const ctx = gsap.context(() => {
       if (reduce) {
-        gsap.set([portraitRef.current, taglineRef.current, scrollHintRef.current], {
-          opacity: 1,
-          y: 0,
-          filter: "blur(0px)",
-          scale: 1,
-        });
+        gsap.set(scrollHintRef.current, { opacity: 0.85 });
         return;
       }
 
-      gsap.set(portraitRef.current, {
-        opacity: 0,
-        scale: 1.08,
-        filter: "blur(20px)",
-      });
-      gsap.set(taglineRef.current, { opacity: 0, y: 20 });
       gsap.set(scrollHintRef.current, { opacity: 0, y: 10 });
-
-      const tl = gsap.timeline({ delay: 0.2 });
-
-      tl.to(portraitRef.current, {
-        opacity: 1,
-        scale: 1,
-        filter: "blur(0px)",
-        duration: 1.6,
+      gsap.to(scrollHintRef.current, {
+        opacity: 0.85,
+        y: 0,
+        duration: 0.9,
         ease: "expo.out",
-      })
-        .to(
-          taglineRef.current,
-          { opacity: 1, y: 0, duration: 0.9, ease: "expo.out" },
-          "-=1.1"
-        )
-        .to(
-          scrollHintRef.current,
-          { opacity: 0.85, y: 0, duration: 0.7, ease: "expo.out" },
-          "-=0.6"
-        );
+        delay: 1.8,
+      });
 
-      // floating scroll hint loop
+      // scroll-hint bar loop
       gsap.to(scrollHintRef.current?.querySelector("[data-bar]") ?? null, {
         scaleY: 0.3,
         transformOrigin: "top",
@@ -71,60 +46,14 @@ export function Hero() {
         yoyo: true,
         repeat: -1,
       });
-    }, sectionRef);
 
-    return () => ctx.revert();
-  }, []);
-
-  // scroll-linked hero → about morph
-  useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const ctx = gsap.context(() => {
-      const trigger = ScrollTrigger.create({
+      // Kinetic storm: triggered by scroll through the hero section
+      ScrollTrigger.create({
         trigger: section,
         start: "top top",
-        end: "+=100%",
-        pin: true,
-        pinSpacing: true,
-        scrub: 0.8,
-        onUpdate: (self) => {
-          backdropRef.current?.kineticStorm(self.progress);
-        },
+        end: "bottom top",
+        onUpdate: (self) => backdropRef.current?.kineticStorm(self.progress),
       });
-
-      gsap.to(portraitRef.current, {
-        scale: 0.42,
-        xPercent: -34,
-        yPercent: 85,
-        ease: "none",
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: "+=100%",
-          scrub: 0.8,
-        },
-      });
-
-      gsap.to([taglineRef.current, scrollHintRef.current], {
-        opacity: 0,
-        y: -20,
-        ease: "power2.in",
-        stagger: 0.04,
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: "+=30%",
-          scrub: true,
-        },
-      });
-
-      return () => {
-        trigger.kill();
-      };
     }, sectionRef);
 
     return () => ctx.revert();
@@ -133,40 +62,52 @@ export function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-svh overflow-hidden"
+      data-section="hero"
+      className="relative min-h-svh"
       aria-label="Introduction"
     >
-      {/* ghost name backdrop */}
+      {/* ghost name backdrop — absolute, centered */}
       <div className="absolute inset-0 flex items-center justify-center">
         <HeroNameBackdrop ref={backdropRef} first="JAKE" last="RYALL" />
       </div>
 
-      {/* foreground portrait */}
+      {/* portrait slot — invisible, provides the size/position the floating portrait reads */}
       <div className="relative mx-auto flex min-h-svh max-w-[1600px] items-center justify-center px-6 md:px-12">
         <div
-          ref={portraitRef}
-          className="relative w-[min(78vw,520px)] will-change-transform"
-          style={{ transformOrigin: "50% 100%" }}
-        >
-          <PortraitFrame
-            src="/images/hero-source.jpg"
-            alt="Jake Ryall — portrait"
-            priority
-            aspect="4/5"
-          />
-        </div>
+          ref={slotRef}
+          data-portrait-target="hero"
+          className="relative w-[min(78vw,520px)] aspect-4/5"
+          aria-hidden
+        />
       </div>
 
-      {/* tagline — bottom-left */}
+      {/* tagline — bottom-left, with char-stagger reveal */}
       <div className="absolute bottom-8 left-6 right-6 flex items-end justify-between gap-6 md:bottom-12 md:left-12 md:right-12">
-        <p
-          ref={taglineRef}
-          className="max-w-md text-pretty text-base leading-snug font-medium text-ink-soft md:text-lg"
-        >
-          Web designer based in Scottsdale, AZ.
+        <div className="max-w-md">
+          <RevealText
+            as="p"
+            splitBy="char"
+            stagger={0.012}
+            weightFrom={300}
+            weightTo={500}
+            delay={1.1}
+            className="text-pretty text-base leading-snug font-medium text-ink-soft md:text-lg"
+          >
+            Web designer based in Scottsdale, AZ.
+          </RevealText>
           <br />
-          <span className="text-ink font-semibold">I design interfaces that move.</span>
-        </p>
+          <RevealText
+            as="span"
+            splitBy="char"
+            stagger={0.014}
+            weightFrom={400}
+            weightTo={700}
+            delay={1.4}
+            className="text-ink md:text-lg"
+          >
+            I design interfaces that move.
+          </RevealText>
+        </div>
 
         {/* scroll hint */}
         <div
