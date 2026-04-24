@@ -1,11 +1,11 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
-import gsap from "gsap";
 import { cn } from "@/lib/utils";
-import { revealLetters, bindWeightToVelocity } from "@/lib/reveal";
-import { motionBus } from "@/lib/motionBus";
+import { revealLetters } from "@/lib/reveal";
 
+// kept for backwards-compat — Hero still calls kineticStorm(progress),
+// but the storm is a no-op now (weight-on-scroll was disorienting).
 export type HeroBackdropHandle = {
   kineticStorm: (progress: number) => void;
 };
@@ -20,12 +20,8 @@ export const HeroNameBackdrop = forwardRef<HeroBackdropHandle, Props>(
   function HeroNameBackdrop({ first, last, className }, ref) {
     const rootRef = useRef<HTMLDivElement>(null);
     const lettersRef = useRef<HTMLSpanElement[]>([]);
-    const stormStateRef = useRef<{ running: boolean; lastP: number }>({
-      running: false,
-      lastP: 0,
-    });
 
-    // initial reveal — uses shared reveal primitive
+    // initial reveal — bold letters rise with variable-weight morph, then settle
     useEffect(() => {
       const tl = revealLetters({
         letters: lettersRef.current,
@@ -39,54 +35,7 @@ export const HeroNameBackdrop = forwardRef<HeroBackdropHandle, Props>(
       };
     }, []);
 
-    // velocity → weight flex (same signal as AboutGhost) via motion bus
-    useEffect(() => {
-      const letters = lettersRef.current;
-      if (!letters.length) return;
-      const unsub = motionBus.subscribe(({ scrollVelocity }) => {
-        bindWeightToVelocity(letters, scrollVelocity, 800);
-      });
-      return unsub;
-    }, []);
-
-    // kinetic storm, exposed to parent (Hero) — triggered at scroll thresholds
-    useImperativeHandle(
-      ref,
-      () => ({
-        kineticStorm: (progress: number) => {
-          const state = stormStateRef.current;
-          const last = state.lastP;
-          state.lastP = progress;
-          const thresholds = [0.2, 0.5, 0.8];
-          for (const t of thresholds) {
-            if (last < t && progress >= t && !state.running) {
-              state.running = true;
-              const letters = lettersRef.current;
-              const targets = letters.map(() => 200 + Math.random() * 600);
-              gsap.to(letters, {
-                fontWeight: (i: number) => targets[i],
-                duration: 0.45,
-                ease: "power3.out",
-                stagger: { each: 0.02, from: "random" },
-                onComplete: () => {
-                  gsap.to(letters, {
-                    fontWeight: 800,
-                    duration: 0.9,
-                    ease: "power3.inOut",
-                    stagger: { each: 0.02, from: "random" },
-                    onComplete: () => {
-                      state.running = false;
-                    },
-                  });
-                },
-              });
-              break;
-            }
-          }
-        },
-      }),
-      []
-    );
+    useImperativeHandle(ref, () => ({ kineticStorm: () => {} }), []);
 
     const renderLetters = (word: string, offset: number) =>
       Array.from(word).map((ch, i) => (
@@ -99,7 +48,7 @@ export const HeroNameBackdrop = forwardRef<HeroBackdropHandle, Props>(
           style={{
             color: "#e4e1d7",
             fontVariationSettings: '"wght" 800',
-            willChange: "transform, font-weight, opacity",
+            willChange: "transform, opacity",
           }}
         >
           {ch}

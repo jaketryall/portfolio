@@ -1,14 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { revealLetters, bindWeightToVelocity } from "@/lib/reveal";
-import { motionBus } from "@/lib/motionBus";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { revealLetters } from "@/lib/reveal";
 
 /**
  * Huge "ABOUT" cradling the portrait from behind. Positioned to sit only
@@ -33,15 +26,6 @@ export function AboutGhostBackdrop() {
       tl?.scrollTrigger?.kill();
       tl?.kill();
     };
-  }, []);
-
-  useEffect(() => {
-    const letters = lettersRef.current;
-    if (!letters.length) return;
-    const unsub = motionBus.subscribe(({ scrollVelocity }) => {
-      bindWeightToVelocity(letters, scrollVelocity, 800);
-    });
-    return unsub;
   }, []);
 
   return (

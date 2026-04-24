@@ -61,20 +61,6 @@ export function Nav() {
     return unsub;
   }, [logoHover]);
 
-  // dot pulse while logo hovered — ties hover to the heartbeat, not a spin
-  useEffect(() => {
-    const dot = dotRef.current;
-    if (!dot) return;
-    if (!logoHover) {
-      gsap.to(dot, { scale: 1, duration: 0.4, ease: "power3.out" });
-      return;
-    }
-    const unsub = motionBus.subscribe(({ heartbeat }) => {
-      dot.style.transform = `scale(${1 + heartbeat * 0.18})`;
-    });
-    return unsub;
-  }, [logoHover]);
-
   return (
     <header
       ref={rootRef}
