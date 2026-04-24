@@ -1,0 +1,80 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+type Stat = { label: string; value: number; suffix?: string };
+
+const STATS: Stat[] = [
+  { label: "Years designing", value: 5 },
+  { label: "Projects shipped", value: 32 },
+  { label: "Happy clients", value: 18 },
+];
+
+export function Stats() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const nums = el.querySelectorAll<HTMLSpanElement>("[data-num]");
+
+    const ctx = gsap.context(() => {
+      nums.forEach((n) => {
+        const target = Number(n.dataset.num ?? 0);
+        if (reduce) {
+          n.textContent = String(target);
+          return;
+        }
+        const obj = { v: 0 };
+        gsap.to(obj, {
+          v: target,
+          duration: 1.8,
+          ease: "expo.out",
+          onUpdate: () => {
+            n.textContent = String(Math.round(obj.v));
+          },
+          scrollTrigger: {
+            trigger: n,
+            start: "top 85%",
+            once: true,
+          },
+        });
+      });
+    }, ref);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className="grid grid-cols-3 gap-6 border-t border-line pt-8"
+    >
+      {STATS.map((s) => (
+        <div key={s.label} className="flex flex-col items-start gap-1">
+          <span
+            className="font-sans text-ink tabular-nums"
+            style={{
+              fontSize: "clamp(2.5rem, 5vw, 4.5rem)",
+              fontWeight: 500,
+              letterSpacing: "-0.04em",
+              lineHeight: 1,
+            }}
+          >
+            <span data-num={s.value}>0</span>
+            {s.suffix ?? ""}
+          </span>
+          <span className="meta">{s.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
