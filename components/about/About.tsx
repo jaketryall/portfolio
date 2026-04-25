@@ -15,12 +15,6 @@ export function About() {
       className="relative mt-16 overflow-hidden rounded-t-[32px] rounded-b-[32px] px-6 pt-32 pb-32 md:mt-24 md:rounded-t-[56px] md:rounded-b-[56px] md:px-12 md:pt-44 md:pb-44 lg:px-20"
       style={{
         background: "var(--color-canvas-2)",
-        // soften the top + bottom edges so the rounded corner curve fully
-        // dissolves into canvas — no visible arc/line at the boundary
-        maskImage:
-          "linear-gradient(180deg, transparent 0px, black 140px, black calc(100% - 140px), transparent 100%)",
-        WebkitMaskImage:
-          "linear-gradient(180deg, transparent 0px, black 140px, black calc(100% - 140px), transparent 100%)",
       }}
     >
       <SlabAtmosphere />
@@ -41,10 +35,6 @@ export function About() {
         {/* about copy */}
         <div className="flex flex-col gap-10 md:col-span-6 md:col-start-7 md:pt-6">
           <div className="flex items-center gap-3">
-            <span
-              aria-hidden
-              className="inline-block h-px w-10 bg-ink"
-            />
             <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink font-semibold">
               5 yrs designing · Scottsdale, AZ
             </span>
