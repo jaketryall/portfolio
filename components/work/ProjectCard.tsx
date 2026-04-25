@@ -118,7 +118,7 @@ export function ProjectCard({ project, index }: Props) {
         },
       });
 
-      // entrance reveal — fades in as it enters viewport
+      // entrance reveal — fades in as it enters viewport (replays on scroll back)
       gsap.fromTo(
         card,
         { y: 40, opacity: 0 },
@@ -131,7 +131,7 @@ export function ProjectCard({ project, index }: Props) {
           scrollTrigger: {
             trigger: card,
             start: "top 88%",
-            once: true,
+            toggleActions: "play reverse play reverse",
           },
         }
       );

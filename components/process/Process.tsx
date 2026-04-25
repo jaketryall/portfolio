@@ -52,7 +52,7 @@ export function Process() {
       weightFrom: 180,
       weightTo: 800,
       stagger: 0.045,
-      scrollTrigger: { trigger: root, start: "top 85%", once: true },
+      scrollTrigger: { trigger: root, start: "top 85%" },
     });
     return () => {
       tl?.scrollTrigger?.kill();
@@ -79,7 +79,7 @@ export function Process() {
           duration: 0.9,
           ease: "expo.out",
           stagger: 0.1,
-          scrollTrigger: { trigger: el, start: "top 78%", once: true },
+          scrollTrigger: { trigger: el, start: "top 78%", toggleActions: "play reverse play reverse" },
         }
       );
       // connecting line draws across the cards
@@ -91,7 +91,7 @@ export function Process() {
             scaleX: 1,
             duration: 1.4,
             ease: "expo.out",
-            scrollTrigger: { trigger: el, start: "top 75%", once: true },
+            scrollTrigger: { trigger: el, start: "top 75%", toggleActions: "play reverse play reverse" },
           }
         );
       }

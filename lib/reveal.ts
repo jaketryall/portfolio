@@ -25,6 +25,13 @@ export type RevealOptions = {
   respectReducedMotion?: boolean;
 };
 
+/**
+ * Default ScrollTrigger toggle behavior for reveals — replays each direction
+ * the user crosses the trigger boundary, so reveals re-run when scrolling
+ * back up and down. Override per-call via the scrollTrigger option.
+ */
+const DEFAULT_TOGGLE_ACTIONS = "play reverse play reverse";
+
 export function revealLetters(opts: RevealOptions): gsap.core.Timeline | null {
   const {
     letters,
@@ -58,9 +65,22 @@ export function revealLetters(opts: RevealOptions): gsap.core.Timeline | null {
     fontVariationSettings: `"wght" ${weightFrom}`,
   });
 
+  // wire default toggle actions if a scrollTrigger is provided and the caller
+  // didn't override `once` or `toggleActions`
+  const stVars = scrollTrigger
+    ? {
+        ...scrollTrigger,
+        toggleActions:
+          (scrollTrigger as ScrollTrigger.Vars).toggleActions ??
+          ((scrollTrigger as ScrollTrigger.Vars).once
+            ? undefined
+            : DEFAULT_TOGGLE_ACTIONS),
+      }
+    : undefined;
+
   const tl = gsap.timeline({
     delay,
-    scrollTrigger,
+    scrollTrigger: stVars,
   });
 
   tl.to(letters, {

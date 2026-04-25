@@ -30,7 +30,7 @@ export function WorkGhostBackdrop() {
       weightFrom: 180,
       weightTo: 800,
       stagger: 0.05,
-      scrollTrigger: { trigger: root, start: "top 85%", once: true },
+      scrollTrigger: { trigger: root, start: "top 85%" },
     });
     return () => {
       tl?.scrollTrigger?.kill();

@@ -45,7 +45,7 @@ export function RevealText({
       weightTo: weightTo ?? 500,
       stagger,
       delay,
-      scrollTrigger: { trigger: el, start, once: true },
+      scrollTrigger: { trigger: el, start },
     });
 
     return () => {
