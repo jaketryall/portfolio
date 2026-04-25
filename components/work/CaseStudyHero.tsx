@@ -5,6 +5,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { RevealText } from "@/components/motion/RevealText";
+import type { CoverTreatment } from "@/lib/coverTreatments";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -18,9 +19,10 @@ type Props = {
   role: string;
   cover: string;
   summary: string;
+  treatment: CoverTreatment;
 };
 
-export function CaseStudyHero({ slug, title, client, year, role, cover, summary }: Props) {
+export function CaseStudyHero({ slug, title, client, year, role, cover, summary, treatment }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
   const coverRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
@@ -100,20 +102,21 @@ export function CaseStudyHero({ slug, title, client, year, role, cover, summary 
           </div>
         </div>
 
-        {/* cover — view-transition target from the project card */}
+        {/* cover — view-transition target from the project card. The
+            view-transition-name lives on the rounded outer container, AND
+            the same per-slug duotone treatment is applied so the morph is
+            visually continuous (rounded shape + same tinted look). */}
         <div
           ref={coverRef}
           className="relative aspect-[16/9] w-full overflow-hidden rounded-[28px] glass"
           style={{
             boxShadow:
               "0 40px 100px -40px rgba(14,14,14,0.28), inset 0 0 0 1px rgba(14,14,14,0.06)",
+            background: treatment.bg,
+            viewTransitionName: `cover-${slug}`,
           }}
         >
-          <div
-            ref={innerRef}
-            className="absolute inset-[-7%]"
-            style={{ viewTransitionName: `cover-${slug}` }}
-          >
+          <div ref={innerRef} className="absolute inset-[-7%]">
             <Image
               src={cover}
               alt={title}
@@ -121,8 +124,19 @@ export function CaseStudyHero({ slug, title, client, year, role, cover, summary 
               priority
               sizes="100vw"
               className="object-cover"
+              style={{
+                filter: treatment.filter,
+                mixBlendMode: treatment.blend,
+                opacity: treatment.opacity,
+              }}
             />
           </div>
+          {/* tonal wash matching the card */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 mix-blend-multiply"
+            style={{ background: treatment.wash }}
+          />
         </div>
 
         {/* summary below cover */}

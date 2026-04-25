@@ -6,12 +6,19 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Project } from "@/lib/projects";
+import type { CoverTreatment } from "@/lib/coverTreatments";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export function NextProject({ project }: { project: Project }) {
+export function NextProject({
+  project,
+  treatment,
+}: {
+  project: Project;
+  treatment: CoverTreatment;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const coverRef = useRef<HTMLDivElement>(null);
 
@@ -64,12 +71,13 @@ export function NextProject({ project }: { project: Project }) {
             style={{
               boxShadow:
                 "0 40px 100px -40px rgba(14,14,14,0.28), inset 0 0 0 1px rgba(14,14,14,0.06)",
+              background: treatment.bg,
+              viewTransitionName: `cover-${project.slug}`,
             }}
           >
             <div
               ref={coverRef}
               className="absolute inset-[-8%]"
-              style={{ viewTransitionName: `cover-${project.slug}` }}
             >
               <Image
                 src={project.cover}
@@ -77,8 +85,19 @@ export function NextProject({ project }: { project: Project }) {
                 fill
                 sizes="100vw"
                 className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
+                style={{
+                  filter: treatment.filter,
+                  mixBlendMode: treatment.blend,
+                  opacity: treatment.opacity,
+                }}
               />
             </div>
+            {/* tonal wash matching the card */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 mix-blend-multiply"
+              style={{ background: treatment.wash }}
+            />
             {/* title overlay */}
             <div className="pointer-events-none absolute inset-0 flex items-end p-8 md:p-14">
               <h3

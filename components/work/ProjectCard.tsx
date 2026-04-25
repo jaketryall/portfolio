@@ -6,85 +6,12 @@ import { Link } from "next-view-transitions";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Project } from "@/lib/projects";
+import { COVER_TREATMENTS } from "@/lib/coverTreatments";
 import { cn } from "@/lib/utils";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
-
-/**
- * Six distinct duotone/wash treatments. Each card pulls one based on its
- * index so the same placeholder source image renders as visually unique
- * compositions across the grid.
- */
-const COVER_TREATMENTS = [
-  // 1. graphite + cream typeblock (Atlas)
-  {
-    bg: "#0e0e0e",
-    filter: "grayscale(1) contrast(1.05) brightness(0.55)",
-    blend: "luminosity" as const,
-    opacity: 0.55,
-    wash: "linear-gradient(135deg, rgba(14,14,14,0.55), rgba(14,14,14,0.15))",
-    titleColor: "#fcfcfb",
-    titleShadow: "none",
-    metaColor: "rgba(252,252,251,0.9)",
-  },
-  // 2. soft cream + sage tint (North)
-  {
-    bg: "#dbe6dc",
-    filter: "grayscale(0.7) contrast(0.95) brightness(1.05)",
-    blend: "multiply" as const,
-    opacity: 0.45,
-    wash: "linear-gradient(180deg, rgba(43,182,115,0.18), rgba(14,14,14,0.04))",
-    titleColor: "#0e0e0e",
-    titleShadow: "none",
-    metaColor: "#0e0e0e",
-  },
-  // 3. high-contrast b&w (Folio)
-  {
-    bg: "#fcfcfb",
-    filter: "grayscale(1) contrast(1.4) brightness(0.95)",
-    blend: "normal" as const,
-    opacity: 0.85,
-    wash: "linear-gradient(180deg, rgba(252,252,251,0.0) 60%, rgba(14,14,14,0.4))",
-    titleColor: "#fcfcfb",
-    titleShadow: "0 2px 30px rgba(14,14,14,0.45)",
-    metaColor: "#fcfcfb",
-  },
-  // 4. warm clay (Sundial)
-  {
-    bg: "#caa581",
-    filter: "grayscale(0.9) sepia(0.3) contrast(1) brightness(0.95)",
-    blend: "multiply" as const,
-    opacity: 0.65,
-    wash: "linear-gradient(135deg, rgba(202,165,129,0.35), rgba(14,14,14,0.18))",
-    titleColor: "#0e0e0e",
-    titleShadow: "none",
-    metaColor: "#0e0e0e",
-  },
-  // 5. cool slate (Orbit)
-  {
-    bg: "#1a2330",
-    filter: "grayscale(0.95) contrast(1.05) brightness(0.6)",
-    blend: "luminosity" as const,
-    opacity: 0.5,
-    wash: "linear-gradient(135deg, rgba(26,35,48,0.6), rgba(26,35,48,0.2))",
-    titleColor: "#fcfcfb",
-    titleShadow: "none",
-    metaColor: "rgba(252,252,251,0.9)",
-  },
-  // 6. paper-white minimal (Quill)
-  {
-    bg: "#f4f2ee",
-    filter: "grayscale(1) contrast(0.85) brightness(1.1)",
-    blend: "multiply" as const,
-    opacity: 0.35,
-    wash: "linear-gradient(180deg, rgba(244,242,238,0.0), rgba(14,14,14,0.06))",
-    titleColor: "#0e0e0e",
-    titleShadow: "none",
-    metaColor: "#0e0e0e",
-  },
-];
 
 type Props = {
   project: Project;
@@ -180,20 +107,22 @@ export function ProjectCard({ project, index }: Props) {
       )}
       style={{ willChange: "transform, opacity" }}
     >
-      {/* cover with parallax + view-transition name */}
+      {/* cover with parallax — view-transition-name on the rounded outer
+          container so the morph carries the rounded shape AND the per-slug
+          duotone bg into the case study hero */}
       <div
         className="relative aspect-4/5 w-full overflow-hidden rounded-[24px] glass"
         style={{
           boxShadow:
             "0 30px 80px -30px rgba(14,14,14,0.22), inset 0 0 0 1px rgba(14,14,14,0.06)",
           background: COVER_TREATMENTS[index % COVER_TREATMENTS.length].bg,
+          viewTransitionName: `cover-${project.slug}`,
         }}
       >
         <div
           ref={coverRef}
           className="absolute inset-[-6%]"
           style={{
-            viewTransitionName: `cover-${project.slug}`,
             willChange: "transform",
           }}
         >

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import type { Metadata } from "next";
 import { getAllSlugs, getProjectBySlug } from "@/lib/projects";
+import { getCoverTreatmentForSlug } from "@/lib/coverTreatments";
 import { CaseStudyHero } from "@/components/work/CaseStudyHero";
 import { NextProject } from "@/components/work/NextProject";
 import { caseStudyMdxComponents } from "./mdx-components";
@@ -39,6 +40,8 @@ export default async function CaseStudyPage({
   if (!project) notFound();
 
   const next = getProjectBySlug(project.nextSlug);
+  const treatment = getCoverTreatmentForSlug(project.slug);
+  const nextTreatment = next ? getCoverTreatmentForSlug(next.slug) : null;
 
   return (
     <>
@@ -50,6 +53,7 @@ export default async function CaseStudyPage({
         role={project.role}
         cover={project.cover}
         summary={project.summary}
+        treatment={treatment}
       />
 
       {/* MDX body */}
@@ -114,7 +118,7 @@ export default async function CaseStudyPage({
         </div>
       </article>
 
-      {next && <NextProject project={next} />}
+      {next && nextTreatment && <NextProject project={next} treatment={nextTreatment} />}
     </>
   );
 }
