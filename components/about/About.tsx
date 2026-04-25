@@ -11,7 +11,7 @@ export function About() {
       id="about"
       data-section="about"
       aria-label="About"
-      className="relative -mt-12 overflow-hidden rounded-t-[32px] rounded-b-[32px] px-6 pt-48 pb-32 md:-mt-20 md:rounded-t-[56px] md:rounded-b-[56px] md:px-12 md:pt-64 md:pb-44 lg:px-20"
+      className="relative mt-16 overflow-hidden rounded-t-[32px] rounded-b-[32px] px-6 pt-32 pb-32 md:mt-24 md:rounded-t-[56px] md:rounded-b-[56px] md:px-12 md:pt-44 md:pb-44 lg:px-20"
       style={{
         background: "var(--color-canvas-2)",
         boxShadow:
