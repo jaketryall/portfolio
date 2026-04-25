@@ -11,9 +11,9 @@ if (typeof window !== "undefined") {
 type Stat = { label: string; value: number; suffix?: string };
 
 const STATS: Stat[] = [
-  { label: "Years designing", value: 5 },
-  { label: "Projects shipped", value: 32 },
-  { label: "Happy clients", value: 18 },
+  { label: "Yrs designing", value: 5 },
+  { label: "Projects", value: 32 },
+  { label: "Clients", value: 18 },
 ];
 
 export function Stats() {
