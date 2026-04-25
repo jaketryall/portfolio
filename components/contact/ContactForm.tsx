@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { MagneticButton } from "@/components/motion/MagneticButton";
 
 const EMAIL = "hello@jakeryall.com";
 
@@ -16,6 +17,7 @@ export function ContactForm() {
   const [project, setProject] = useState("");
   const [budget, setBudget] = useState("");
   const [message, setMessage] = useState("");
+  const [sent, setSent] = useState(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,10 +35,12 @@ export function ContactForm() {
         .join("\n")
     );
     window.location.href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
+    setSent(true);
+    window.setTimeout(() => setSent(false), 3500);
   };
 
   const inputClasses =
-    "w-full bg-transparent border-0 border-b border-line py-3 text-base text-ink placeholder:text-ink-mute focus:border-ink focus:outline-none transition-colors";
+    "field-input w-full bg-transparent border-0 border-b border-line py-3 text-base text-ink placeholder:text-ink-mute focus:outline-none";
 
   return (
     <form
@@ -56,7 +60,7 @@ export function ContactForm() {
             autoComplete="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Maya Chen"
+            placeholder="Your name"
             className={inputClasses}
           />
         </label>
@@ -114,23 +118,24 @@ export function ContactForm() {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="What are you working on, who's the team, when do you want to launch?"
-          className="w-full bg-transparent border-0 border-b border-line py-3 text-base text-ink placeholder:text-ink-mute focus:border-ink focus:outline-none transition-colors resize-none"
+          className="field-input w-full bg-transparent border-0 border-b border-line py-3 text-base text-ink placeholder:text-ink-mute focus:outline-none resize-none"
         />
       </label>
 
-      <div className="mt-4 flex flex-col items-start gap-3 md:flex-row md:items-center md:justify-between">
-        <p className="text-xs text-ink-mute">
-          Submitting will open your mail app pre-filled to{" "}
+      <div className="mt-4 flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
+        <p className="max-w-xs text-xs text-ink-mute">
+          Submitting opens your mail app pre-filled to{" "}
           <span className="text-ink font-semibold">{EMAIL}</span>.
         </p>
-        <button
+        <MagneticButton
+          as="button"
           type="submit"
           data-cursor="view"
           data-cursor-label="SEND"
-          className="rounded-full bg-ink px-7 py-4 font-mono text-[12px] tracking-[0.2em] uppercase text-canvas font-semibold transition-transform duration-300 hover:scale-[1.02] active:scale-[0.98]"
+          className="rounded-full bg-ink px-9 py-5 font-mono text-[13px] tracking-[0.2em] uppercase text-canvas font-semibold"
         >
-          Send message →
-        </button>
+          {sent ? "Mail app opened ✓" : "Send message →"}
+        </MagneticButton>
       </div>
     </form>
   );

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { RevealText } from "@/components/motion/RevealText";
 import { MagneticButton } from "@/components/motion/MagneticButton";
-import { AvailabilityPill } from "@/components/ui/AvailabilityPill";
 import { ContactGhostBackdrop } from "@/components/contact/ContactGhostBackdrop";
 import { ContactForm } from "@/components/contact/ContactForm";
 
@@ -34,7 +34,7 @@ export default function ContactPage() {
           <div className="flex items-center gap-3">
             <span aria-hidden className="inline-block h-px w-10 bg-ink" />
             <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink font-semibold">
-              Available · Q3 2026
+              Get in touch · 2026
             </span>
           </div>
 
@@ -43,24 +43,15 @@ export default function ContactPage() {
             style={{ fontSize: "clamp(2.75rem, 6vw, 6rem)" }}
           >
             <RevealText as="span" splitBy="word" stagger={0.05} className="block">
-              Have a project
+              Tell me
             </RevealText>
             <RevealText as="span" splitBy="word" stagger={0.05} delay={0.15} className="block">
-              in mind?
-            </RevealText>
-            <RevealText
-              as="span"
-              splitBy="word"
-              stagger={0.05}
-              delay={0.3}
-              className="block text-ink-soft"
-            >
-              Let&rsquo;s talk.
+              about it.
             </RevealText>
           </h1>
 
           <p className="max-w-lg text-pretty text-base font-medium leading-relaxed text-ink-soft md:text-lg">
-            I take on a small number of projects each quarter. Drop a few details below — or email me directly. I usually reply within a day.
+            I take on a small number of projects each quarter. Drop a few details below — or email me directly. Replies usually inside a day.
           </p>
 
           <div className="flex flex-col items-start gap-4">
@@ -73,7 +64,6 @@ export default function ContactPage() {
             >
               {EMAIL}
             </MagneticButton>
-            <AvailabilityPill>Replies within ~24h</AvailabilityPill>
           </div>
 
           <div className="mt-4 flex flex-wrap gap-x-8 gap-y-3 border-t border-line pt-8">
@@ -93,8 +83,26 @@ export default function ContactPage() {
           </div>
         </div>
 
-        {/* right: form card */}
-        <div className="md:col-span-5 md:col-start-8">
+        {/* right: portrait + form card */}
+        <div className="flex flex-col gap-8 md:col-span-5 md:col-start-8">
+          {/* candid portrait — small, anchors the right column visually */}
+          <div
+            className="relative aspect-5/3 w-full overflow-hidden rounded-[24px] glass"
+            style={{
+              boxShadow:
+                "0 20px 60px -30px rgba(14,14,14,0.22), inset 0 0 0 1px rgba(14,14,14,0.06)",
+            }}
+          >
+            <Image
+              src="/images/about-source.jpg"
+              alt="Jake Ryall"
+              fill
+              priority
+              sizes="(min-width: 1024px) 40vw, 90vw"
+              className="object-cover"
+            />
+          </div>
+
           <div
             className="rounded-[28px] p-7 md:p-10"
             style={{
@@ -103,12 +111,10 @@ export default function ContactPage() {
                 "inset 0 0 0 1px rgba(14,14,14,0.06), 0 30px 80px -40px rgba(14,14,14,0.18)",
             }}
           >
-            <div className="mb-8 flex items-center justify-between">
+            <div className="mb-8 flex items-center gap-3">
+              <span aria-hidden className="inline-block h-px w-10 bg-ink" />
               <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink font-semibold">
                 Project brief
-              </span>
-              <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-ink-mute font-semibold">
-                Optional
               </span>
             </div>
             <ContactForm />

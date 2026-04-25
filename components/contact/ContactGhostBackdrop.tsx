@@ -32,7 +32,7 @@ export function ContactGhostBackdrop() {
     >
       <div className="relative mx-auto h-full max-w-[1600px]">
         <div
-          className="absolute right-0 top-32 overflow-hidden text-right md:top-40"
+          className="absolute left-0 top-32 overflow-hidden text-left md:top-40"
           style={{
             width: "min(900px, 75%)",
             fontFamily: "var(--font-sans)",
