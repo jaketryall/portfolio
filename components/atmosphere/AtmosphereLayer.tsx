@@ -41,7 +41,7 @@ export function AtmosphereLayer() {
     <div
       ref={ref}
       aria-hidden
-      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden rounded-t-[32px] md:rounded-t-[56px]"
+      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
     >
       <div
         data-shape
