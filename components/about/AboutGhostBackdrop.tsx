@@ -42,13 +42,13 @@ export function AboutGhostBackdrop() {
         <div
           className="absolute top-4 left-0 overflow-hidden"
           style={{
-            width: "min(600px, 50%)",
+            width: "min(600px, 90%)",
             fontFamily: "var(--font-sans)",
             color: "#e4e1d7",
             fontWeight: 800,
             letterSpacing: "-0.07em",
             lineHeight: 0.85,
-            fontSize: "clamp(5rem, 12vw, 11rem)",
+            fontSize: "clamp(3.5rem, 12vw, 11rem)",
           }}
         >
           <span className="block overflow-hidden whitespace-nowrap">

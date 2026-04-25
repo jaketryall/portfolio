@@ -86,13 +86,13 @@ export function WorkGhostBackdrop() {
           className="absolute right-0 overflow-hidden text-right"
           style={{
             top: "-100vh",
-            width: "min(700px, 55%)",
+            width: "min(700px, 90%)",
             fontFamily: "var(--font-sans)",
             color: "#e4e1d7",
             fontWeight: 800,
             letterSpacing: "-0.07em",
             lineHeight: 0.85,
-            fontSize: "clamp(5rem, 14vw, 13rem)",
+            fontSize: "clamp(4rem, 14vw, 13rem)",
             willChange: "top",
           }}
         >
