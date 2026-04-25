@@ -10,7 +10,7 @@ export function WorkGrid() {
       id="work"
       data-section="work"
       aria-label="Selected work"
-      className="relative px-6 pt-40 md:px-12 md:pt-56 lg:px-20"
+      className="relative px-6 pt-64 md:px-12 md:pt-80 lg:px-20"
     >
       <WorkGhostBackdrop />
 
