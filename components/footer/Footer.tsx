@@ -68,8 +68,6 @@ export function Footer() {
       className="relative -mt-16 overflow-hidden rounded-t-[32px] px-6 pb-10 pt-32 md:-mt-24 md:rounded-t-[56px] md:px-12 md:pb-12 md:pt-44 lg:px-20"
       style={{
         background: "var(--color-canvas-2)",
-        boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 0 0 1px rgba(14,14,14,0.05)",
       }}
     >
       <SlabAtmosphere />
