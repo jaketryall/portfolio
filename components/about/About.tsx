@@ -4,6 +4,7 @@ import { RevealText } from "@/components/motion/RevealText";
 import { ToolsMarquee } from "./ToolsMarquee";
 import { Stats } from "./Stats";
 import { AboutGhostBackdrop } from "./AboutGhostBackdrop";
+import { SlabAtmosphere } from "@/components/atmosphere/SlabAtmosphere";
 
 export function About() {
   return (
@@ -13,11 +14,11 @@ export function About() {
       aria-label="About"
       className="relative mt-16 overflow-hidden rounded-t-[32px] rounded-b-[32px] px-6 pt-32 pb-32 md:mt-24 md:rounded-t-[56px] md:rounded-b-[56px] md:px-12 md:pt-44 md:pb-44 lg:px-20"
       style={{
-        background: "rgba(244, 242, 238, 0.4)",
-        boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 0 0 1px rgba(14,14,14,0.05)",
+        background: "var(--color-canvas-2)",
       }}
     >
+      <SlabAtmosphere />
+
       {/* echoing ghost-text motif — tied to the hero's JAKE/RYALL backdrop */}
       <AboutGhostBackdrop />
 

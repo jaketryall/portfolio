@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { RevealText } from "@/components/motion/RevealText";
 import { revealLetters } from "@/lib/reveal";
+import { SlabAtmosphere } from "@/components/atmosphere/SlabAtmosphere";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -108,11 +109,11 @@ export function Process() {
       aria-label="Process"
       className="relative -mt-16 overflow-hidden rounded-t-[32px] rounded-b-[32px] px-6 py-24 md:-mt-24 md:rounded-t-[56px] md:rounded-b-[56px] md:px-12 md:py-40 lg:px-20"
       style={{
-        background: "rgba(244, 242, 238, 0.4)",
-        boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 0 0 1px rgba(14,14,14,0.05)",
+        background: "var(--color-canvas-2)",
       }}
     >
+      <SlabAtmosphere />
+
       <div className="contents">
         {/* ghost word — same motif as JAKE / RYALL / ABOUT / WORK */}
         <div
