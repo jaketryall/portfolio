@@ -1,4 +1,3 @@
-import { AtmosphereLayer } from "@/components/atmosphere/AtmosphereLayer";
 import { Hero } from "@/components/hero/Hero";
 import { About } from "@/components/about/About";
 import { FloatingPortrait } from "@/components/hero/FloatingPortrait";
@@ -10,8 +9,6 @@ import { Footer } from "@/components/footer/Footer";
 export default function Home() {
   return (
     <>
-      <AtmosphereLayer />
-
       <div data-portrait-scrub="true" className="relative">
         <FloatingPortrait
           heroSrc="/images/hero-source.jpg"
