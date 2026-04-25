@@ -163,6 +163,43 @@
   }
 }
 
+/* ─── Page transitions (View Transitions API) ──────────────────────────────
+ *
+ * Default cross-fade replaced with a cinematic slide + scale + focus-pull.
+ * Old page lifts and dissolves, new page rises into focus from below.
+ * Cover-image morph (from project card → case study hero) is unaffected
+ * because it runs in its own view-transition group via [view-transition-name].
+ */
+::view-transition-old(root) {
+  animation: 450ms cubic-bezier(0.76, 0, 0.24, 1) both page-out;
+}
+::view-transition-new(root) {
+  animation: 500ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both page-in;
+}
+
+@keyframes page-out {
+  to {
+    transform: translateY(-6%) scale(0.97);
+    opacity: 0;
+    filter: blur(8px);
+  }
+}
+
+@keyframes page-in {
+  from {
+    transform: translateY(8%) scale(1.04);
+    opacity: 0;
+    filter: blur(10px);
+  }
+}
+
+/* Cover morph: smooth slide-style positioning; the browser interpolates
+ * size/position via the shared view-transition-name automatically. */
+::view-transition-group(*) {
+  animation-duration: 600ms;
+  animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
 /* Reduced-motion: strip scroll-linked + long durations */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -172,5 +209,10 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.01ms !important;
+    animation-name: none !important;
   }
 }
