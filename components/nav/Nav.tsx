@@ -8,7 +8,7 @@ import { AvailabilityPill } from "@/components/ui/AvailabilityPill";
 import { motionBus } from "@/lib/motionBus";
 
 const LINKS = [
-  { label: "Index", href: "/" },
+  { label: "Home", href: "/" },
   { label: "Work", href: "/#work" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
@@ -82,12 +82,13 @@ export function Nav() {
 
   return (
     <>
-      {/* Top fade mask — fades scroll content into the canvas color before
-          it reaches the nav, so big marquees / display text don't read
-          through the glass on mobile. */}
+      {/* Top fade mask — mobile only. Fades scroll content into the canvas
+          before it reaches the nav so big marquees / display text don't bleed
+          through the glass dock. Desktop has enough room to let the page
+          scroll under the glass cleanly without a white shelf. */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-x-0 top-0 z-30 h-24 md:h-28"
+        className="pointer-events-none fixed inset-x-0 top-0 z-30 h-24 md:hidden"
         style={{
           background:
             "linear-gradient(180deg, var(--color-canvas) 0%, var(--color-canvas) 55%, rgba(252,252,251,0) 100%)",
@@ -117,9 +118,15 @@ export function Nav() {
               transition: "background 0.4s",
             }}
           />
-          <span className="nav-link relative inline-flex overflow-hidden">
-            <span className="nav-link-inner">Jake Ryall</span>
-            <span className="nav-link-clone">Jake Ryall</span>
+          <span className="nav-link relative inline-flex">
+            <span className="nav-link-mask">
+              <span className="nav-link-stack">
+                <span className="nav-link-inner">Jake Ryall</span>
+                <span className="nav-link-clone" aria-hidden>
+                  Jake Ryall
+                </span>
+              </span>
+            </span>
           </span>
         </Link>
 
@@ -137,8 +144,14 @@ export function Nav() {
                 className="nav-link group relative inline-flex items-center rounded-full px-4 py-2 text-[13px] font-mono tracking-[0.18em] uppercase text-ink font-semibold"
                 data-cursor="hover"
               >
-                <span className="nav-link-inner">{l.label}</span>
-                <span className="nav-link-clone">{l.label}</span>
+                <span className="nav-link-mask">
+                  <span className="nav-link-stack">
+                    <span className="nav-link-inner">{l.label}</span>
+                    <span className="nav-link-clone" aria-hidden>
+                      {l.label}
+                    </span>
+                  </span>
+                </span>
               </Link>
             ))}
           </nav>
@@ -186,8 +199,14 @@ export function Nav() {
                 }}
                 data-cursor="hover"
               >
-                <span className="nav-link-inner">{l.label}</span>
-                <span className="nav-link-clone">{l.label}</span>
+                <span className="nav-link-mask">
+                  <span className="nav-link-stack">
+                    <span className="nav-link-inner">{l.label}</span>
+                    <span className="nav-link-clone" aria-hidden>
+                      {l.label}
+                    </span>
+                  </span>
+                </span>
               </Link>
             );
           })}

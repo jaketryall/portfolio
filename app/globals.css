@@ -127,35 +127,40 @@
     color: var(--color-ink-soft);
   }
 
+  /* Two-line slot effect: original + clone live in the same grid cell so
+   * they share x/y. Mask wrapper clips to one line-height so the link's own
+   * padding doesn't leak the resting clone into view. */
   .nav-link {
     position: relative;
-    overflow: hidden;
     line-height: 1;
     cursor: pointer;
   }
 
-  .nav-link-inner {
+  .nav-link-mask {
     display: inline-block;
+    overflow: hidden;
+    line-height: 1;
+  }
+
+  .nav-link-stack {
+    display: inline-grid;
+    grid-template-areas: "stack";
     transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
     will-change: transform;
   }
 
-  .nav-link:hover .nav-link-inner,
-  .nav-link:focus-visible .nav-link-inner {
-    transform: translateY(-100%);
+  .nav-link-inner,
+  .nav-link-clone {
+    grid-area: stack;
+    display: inline-block;
   }
 
   .nav-link-clone {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    display: inline-block;
-    transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
-    will-change: transform;
+    transform: translateY(100%);
   }
 
-  .nav-link:hover .nav-link-clone,
-  .nav-link:focus-visible .nav-link-clone {
+  .nav-link:hover .nav-link-stack,
+  .nav-link:focus-visible .nav-link-stack {
     transform: translateY(-100%);
   }
 }

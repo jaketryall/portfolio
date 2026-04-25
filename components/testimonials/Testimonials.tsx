@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { revealLetters } from "@/lib/reveal";
@@ -27,205 +27,165 @@ const QUOTES = [
   },
 ];
 
-const ROTATE_MS = 6500;
-
+/**
+ * Three monumental statements, stacked vertically. No carousel, no headline,
+ * no kicker. Each quote is a sustained moment — set huge, attribution treated
+ * as typography (the name BECOMES a display element). Differentiates this
+ * section from the card-grid pattern used everywhere else on the page.
+ */
 export function Testimonials() {
   const ref = useRef<HTMLElement>(null);
-  const ghostRef = useRef<HTMLDivElement>(null);
-  const ghostLettersRef = useRef<HTMLSpanElement[]>([]);
-  const quoteRef = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
 
-  // ghost reveal
+  // Per-quote letter reveal on the attribution name. Re-uses the shared
+  // revealLetters primitive so motion vocabulary stays consistent with hero
+  // / about / work / contact.
   useEffect(() => {
-    const root = ghostRef.current;
+    const root = ref.current;
     if (!root) return;
-    const tl = revealLetters({
-      letters: ghostLettersRef.current,
-      weightFrom: 180,
-      weightTo: 800,
-      stagger: 0.05,
-      scrollTrigger: { trigger: root, start: "top 85%" },
-    });
-    return () => {
-      tl?.scrollTrigger?.kill();
-      tl?.kill();
-    };
+    const ctx = gsap.context(() => {
+      const groups = root.querySelectorAll<HTMLElement>("[data-quote-name]");
+      groups.forEach((g) => {
+        const letters = Array.from(
+          g.querySelectorAll<HTMLElement>("[data-name-letter]")
+        );
+        revealLetters({
+          letters,
+          weightFrom: 200,
+          weightTo: 800,
+          stagger: 0.04,
+          scrollTrigger: { trigger: g, start: "top 95%" },
+        });
+      });
+    }, root);
+    return () => ctx.revert();
   }, []);
 
-  // auto-rotate
+  // Quote body fades in word-by-word via a lightweight stagger. We don't use
+  // RevealText here because the body sits inline-block per word for control
+  // over the open-quote glyph alignment.
   useEffect(() => {
-    if (paused) return;
-    const id = window.setTimeout(() => {
-      setActive((a) => (a + 1) % QUOTES.length);
-    }, ROTATE_MS);
-    return () => window.clearTimeout(id);
-  }, [active, paused]);
-
-  // animate the quote in/out on change
-  useEffect(() => {
-    const el = quoteRef.current;
-    if (!el) return;
+    const root = ref.current;
+    if (!root) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
-    gsap.fromTo(
-      el,
-      { y: 16, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.7, ease: "expo.out" }
-    );
-  }, [active]);
 
-  const current = QUOTES[active];
+    const ctx = gsap.context(() => {
+      const blocks = root.querySelectorAll<HTMLElement>("[data-quote-block]");
+      blocks.forEach((block) => {
+        const words = block.querySelectorAll<HTMLElement>("[data-word]");
+        gsap.fromTo(
+          words,
+          { y: "60%", opacity: 0 },
+          {
+            y: "0%",
+            opacity: 1,
+            duration: 0.9,
+            ease: "expo.out",
+            stagger: 0.018,
+            scrollTrigger: {
+              trigger: block,
+              start: "top 80%",
+              toggleActions: "play reverse play reverse",
+            },
+          }
+        );
+      });
+    }, root);
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section
       ref={ref}
       aria-label="Testimonials"
-      className="relative overflow-hidden px-6 py-32 md:px-12 md:py-44 lg:px-20"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      className="relative overflow-hidden px-6 py-40 md:px-12 md:py-56 lg:px-20"
     >
-      {/* ghost word — same motif */}
-      <div
-        ref={ghostRef}
-        aria-hidden
-        className="pointer-events-none absolute inset-0 select-none"
-        style={{ zIndex: 0 }}
-      >
-        <div className="relative mx-auto h-full max-w-[1600px]">
-          <div
-            className="absolute left-0 top-32 overflow-hidden md:top-44"
-            style={{
-              width: "min(900px, 70%)",
-              fontFamily: "var(--font-sans)",
-              color: "#e4e1d7",
-              fontWeight: 800,
-              letterSpacing: "-0.07em",
-              lineHeight: 0.85,
-              fontSize: "clamp(5rem, 14vw, 13rem)",
-            }}
-          >
-            <span className="block overflow-hidden whitespace-nowrap">
-              {Array.from("WORDS").map((ch, i) => (
-                <span
-                  key={i}
-                  ref={(el) => {
-                    if (el) ghostLettersRef.current[i] = el;
-                  }}
-                  className="inline-block"
-                  style={{
-                    color: "#e4e1d7",
-                    fontVariationSettings: '"wght" 800',
-                    willChange: "transform, font-variation-settings, opacity",
-                  }}
-                >
-                  {ch}
-                </span>
-              ))}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div className="relative mx-auto max-w-[1400px]">
-        <div className="mb-12 flex flex-col gap-8">
-          <div className="flex items-center gap-3">
-            <span aria-hidden className="inline-block h-px w-10 bg-ink" />
-            <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink font-semibold">
-              Words
-            </span>
-          </div>
-          <h2
-            className="display-black max-w-3xl text-ink"
-            style={{ fontSize: "clamp(2.25rem, 4vw, 4rem)" }}
-          >
-            What clients say.
-          </h2>
-        </div>
-
-        {/* Big decorative open quote */}
-        <span
-          aria-hidden
-          className="block leading-none text-ink"
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "clamp(5rem, 10vw, 10rem)",
-            fontWeight: 800,
-            letterSpacing: "-0.05em",
-            transform: "translateY(0.15em)",
-          }}
-        >
-          “
-        </span>
-
-        <div ref={quoteRef} className="-mt-8 min-h-[260px] md:min-h-[300px]">
-          <blockquote
-            className="display max-w-5xl text-pretty text-ink"
-            style={{
-              fontSize: "clamp(1.65rem, 3.2vw, 3rem)",
-              lineHeight: 1.15,
-              letterSpacing: "-0.02em",
-              fontWeight: 600,
-            }}
-          >
-            {current.body}
-          </blockquote>
-          <div className="mt-12 flex items-center gap-4">
-            <span aria-hidden className="inline-block h-px w-8 bg-ink" />
-            <div>
-              <div
-                className="text-ink"
+      <div className="relative mx-auto flex max-w-[1400px] flex-col gap-32 md:gap-56">
+        {QUOTES.map((q, i) => {
+          // Right-align is a desktop affordance only — on mobile every quote
+          // sits left so attribution can't slide under the bottom dock.
+          const right = i % 2 === 1;
+          return (
+            <figure
+              key={q.name}
+              className={
+                right
+                  ? "max-w-4xl text-left md:ml-auto md:text-right"
+                  : "max-w-4xl text-left"
+              }
+            >
+              {/* Quote body — display-scale, words rise from a mask line.
+                  Open-quote glyph is part of the body, not a decoration. */}
+              <blockquote
+                data-quote-block
+                className="text-pretty text-ink"
                 style={{
                   fontFamily: "var(--font-sans)",
+                  fontSize: "clamp(1.85rem, 4.2vw, 4.25rem)",
                   fontWeight: 700,
-                  fontSize: "1rem",
-                  letterSpacing: "-0.01em",
+                  letterSpacing: "-0.035em",
+                  lineHeight: 1.05,
                 }}
               >
-                {current.name}
-              </div>
-              <div className="font-mono text-[11px] tracking-[0.16em] uppercase text-ink-soft font-semibold">
-                {current.role}
-              </div>
-            </div>
-          </div>
-        </div>
+                {q.body.split(" ").map((w, wi) => (
+                  <span
+                    key={wi}
+                    className="inline-block overflow-hidden align-bottom"
+                    style={{
+                      paddingTop: "0.18em",
+                      paddingBottom: "0.18em",
+                      marginTop: "-0.18em",
+                      marginBottom: "-0.18em",
+                    }}
+                  >
+                    <span data-word className="inline-block">
+                      {w}
+                      {wi < q.body.split(" ").length - 1 ? " " : ""}
+                    </span>
+                  </span>
+                ))}
+              </blockquote>
 
-        {/* progress bars — visual anchor + click-to-jump */}
-        <div className="mt-12 flex gap-2">
-          {QUOTES.map((_, i) => {
-            const isActive = i === active;
-            return (
-              <button
-                key={i}
-                type="button"
-                onClick={() => setActive(i)}
-                aria-label={`Show testimonial ${i + 1}`}
-                data-cursor="hover"
-                className="group relative h-1 w-20 overflow-hidden rounded-full bg-line transition-all hover:h-1.5"
+              {/* Attribution — name is set big and revealed letter-by-letter,
+                  treated as a typographic element. Role drops to mono below. */}
+              <figcaption
+                className={
+                  "mt-10 flex flex-col gap-1 items-start md:mt-14 " +
+                  (right ? "md:items-end" : "")
+                }
               >
                 <span
-                  aria-hidden
-                  className="absolute inset-y-0 left-0 origin-left bg-ink"
-                  key={`fill-${active}-${i}`}
+                  data-quote-name
+                  aria-label={q.name}
+                  className="overflow-hidden"
                   style={{
-                    width: "100%",
-                    transform: isActive
-                      ? "scaleX(1)"
-                      : i < active
-                      ? "scaleX(1)"
-                      : "scaleX(0)",
-                    transition: isActive
-                      ? `transform ${paused ? 0 : ROTATE_MS}ms linear`
-                      : "transform 0.3s",
-                    transformOrigin: "left center",
+                    fontFamily: "var(--font-sans)",
+                    fontWeight: 800,
+                    letterSpacing: "-0.04em",
+                    lineHeight: 1,
+                    color: "var(--color-ink)",
+                    fontSize: "clamp(1.6rem, 2.6vw, 2.4rem)",
                   }}
-                />
-              </button>
-            );
-          })}
-        </div>
+                >
+                  {Array.from(q.name).map((ch, ci) => (
+                    <span
+                      key={ci}
+                      data-name-letter
+                      aria-hidden
+                      className="inline-block whitespace-pre"
+                      style={{ fontVariationSettings: '"wght" 200' }}
+                    >
+                      {ch}
+                    </span>
+                  ))}
+                </span>
+                <span className="font-mono text-[11px] tracking-[0.18em] uppercase text-ink-soft font-semibold">
+                  {q.role}
+                </span>
+              </figcaption>
+            </figure>
+          );
+        })}
       </div>
     </section>
   );
