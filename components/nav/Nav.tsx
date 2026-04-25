@@ -10,7 +10,7 @@ const LINKS = [
   { label: "Index", href: "/" },
   { label: "Work", href: "/#work" },
   { label: "About", href: "/#about" },
-  { label: "Contact", href: "mailto:hello@jakeryall.com" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export function Nav() {
