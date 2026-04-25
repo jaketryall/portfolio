@@ -164,14 +164,32 @@ export function Process() {
             >
               <RevealText
                 as="span"
-                splitBy="char"
-                stagger={0.012}
-                weightFrom={200}
-                weightTo={800}
+                splitBy="word"
+                stagger={0.04}
                 className="block"
                 start="top 85%"
               >
-                A small team. A clear plan. Real output.
+                A small team.
+              </RevealText>
+              <RevealText
+                as="span"
+                splitBy="word"
+                stagger={0.04}
+                delay={0.1}
+                className="block"
+                start="top 85%"
+              >
+                A clear plan.
+              </RevealText>
+              <RevealText
+                as="span"
+                splitBy="word"
+                stagger={0.04}
+                delay={0.2}
+                className="block text-ink-soft"
+                start="top 85%"
+              >
+                Real output.
               </RevealText>
             </h2>
           </div>
