@@ -59,9 +59,17 @@ export function RevealText({
       key={idx}
       className="inline-block overflow-hidden align-bottom"
       style={{
-        // breathing room so ascenders/caps/diacritics aren't clipped by the mask
+        // breathing room on all four sides so caps/ascenders/descenders/side
+        // bearings (ligatures, italic kerns, tight tracking) aren't clipped
+        // by the mask
         paddingTop: "0.3em",
+        paddingBottom: "0.3em",
+        paddingLeft: "0.05em",
+        paddingRight: "0.05em",
         marginTop: "-0.3em",
+        marginBottom: "-0.3em",
+        marginLeft: "-0.05em",
+        marginRight: "-0.05em",
       }}
       aria-hidden={splitBy === "char"}
     >
