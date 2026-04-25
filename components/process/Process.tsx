@@ -106,73 +106,78 @@ export function Process() {
       id="process"
       data-section="process"
       aria-label="Process"
-      className="relative overflow-hidden px-6 py-32 md:px-12 md:py-48 lg:px-20"
-      style={{
-        background:
-          "linear-gradient(180deg, var(--color-canvas) 0%, var(--color-canvas-2) 12%, var(--color-canvas-2) 88%, var(--color-canvas) 100%)",
-      }}
+      className="relative px-3 py-20 md:px-6 md:py-32 lg:px-10"
     >
-      {/* ghost word — same motif as JAKE / RYALL / ABOUT / WORK */}
+      {/* rounded slab — tonal canvas-2 container with soft inner shadow */}
       <div
-        ref={ghostRef}
-        aria-hidden
-        className="pointer-events-none absolute inset-0 select-none"
-        style={{ zIndex: 0 }}
+        className="relative overflow-hidden rounded-[28px] px-6 py-24 md:rounded-[40px] md:px-12 md:py-40 lg:px-20"
+        style={{
+          background: "var(--color-canvas-2)",
+          boxShadow:
+            "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 0 0 1px rgba(14,14,14,0.05)",
+        }}
       >
-        <div className="relative mx-auto h-full max-w-[1600px]">
-          <div
-            className="absolute right-0 top-32 overflow-hidden text-right md:top-40"
-            style={{
-              width: "min(900px, 70%)",
-              fontFamily: "var(--font-sans)",
-              color: "#ddd9cb",
-              fontWeight: 800,
-              letterSpacing: "-0.07em",
-              lineHeight: 0.85,
-              fontSize: "clamp(5rem, 13vw, 12rem)",
-            }}
-          >
-            <span className="block overflow-hidden whitespace-nowrap">
-              {Array.from("PROCESS").map((ch, i) => (
-                <span
-                  key={i}
-                  ref={(el) => {
-                    if (el) ghostLettersRef.current[i] = el;
-                  }}
-                  className="inline-block"
-                  style={{
-                    color: "#ddd9cb",
-                    fontVariationSettings: '"wght" 800',
-                    willChange: "transform, font-variation-settings, opacity",
-                  }}
-                >
-                  {ch}
-                </span>
-              ))}
-            </span>
+        {/* ghost word — same motif as JAKE / RYALL / ABOUT / WORK */}
+        <div
+          ref={ghostRef}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 select-none"
+          style={{ zIndex: 0 }}
+        >
+          <div className="relative mx-auto h-full max-w-[1600px]">
+            <div
+              className="absolute right-0 top-32 overflow-hidden text-right md:top-40"
+              style={{
+                width: "min(900px, 70%)",
+                fontFamily: "var(--font-sans)",
+                color: "#ddd9cb",
+                fontWeight: 800,
+                letterSpacing: "-0.07em",
+                lineHeight: 0.85,
+                fontSize: "clamp(5rem, 13vw, 12rem)",
+              }}
+            >
+              <span className="block overflow-hidden whitespace-nowrap">
+                {Array.from("PROCESS").map((ch, i) => (
+                  <span
+                    key={i}
+                    ref={(el) => {
+                      if (el) ghostLettersRef.current[i] = el;
+                    }}
+                    className="inline-block"
+                    style={{
+                      color: "#ddd9cb",
+                      fontVariationSettings: '"wght" 800',
+                      willChange: "transform, font-variation-settings, opacity",
+                    }}
+                  >
+                    {ch}
+                  </span>
+                ))}
+              </span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="relative mx-auto max-w-[1600px]">
-        <div className="mb-16 flex flex-col gap-8 md:mb-24">
-          <h2
-            className="display-black max-w-3xl text-ink"
-            style={{ fontSize: "clamp(2.25rem, 4.5vw, 4.5rem)" }}
-          >
-            <RevealText
-              as="span"
-              splitBy="char"
-              stagger={0.012}
-              weightFrom={200}
-              weightTo={800}
-              className="block"
-              start="top 85%"
+        <div className="relative mx-auto max-w-[1600px]">
+          <div className="mb-16 flex flex-col gap-8 md:mb-24">
+            <h2
+              className="display-black max-w-3xl text-ink"
+              style={{ fontSize: "clamp(2.25rem, 4.5vw, 4.5rem)" }}
             >
-              A small team. A clear plan. Real output.
-            </RevealText>
-          </h2>
-        </div>
+              <RevealText
+                as="span"
+                splitBy="char"
+                stagger={0.012}
+                weightFrom={200}
+                weightTo={800}
+                className="block"
+                start="top 85%"
+              >
+                A small team. A clear plan. Real output.
+              </RevealText>
+            </h2>
+          </div>
 
         {/* connecting line between cards */}
         <div className="relative">
@@ -246,6 +251,7 @@ export function Process() {
               </article>
             ))}
           </div>
+        </div>
         </div>
       </div>
     </section>
