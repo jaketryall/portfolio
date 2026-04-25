@@ -39,18 +39,35 @@ export function RevealText({
       el.querySelectorAll<HTMLElement>(".reveal-piece")
     );
 
+    // Add will-change ONLY while animating; remove after each play to
+    // free GPU layers. Was creating ~285 permanent layers across the page.
+    const addLayers = () => {
+      letters.forEach((l) => (l.style.willChange = "transform, opacity"));
+    };
+    const dropLayers = () => {
+      letters.forEach((l) => (l.style.willChange = ""));
+    };
+
     const tl = revealLetters({
       letters,
       weightFrom: weightFrom ?? 500,
       weightTo: weightTo ?? 500,
       stagger,
       delay,
-      scrollTrigger: { trigger: el, start },
+      scrollTrigger: {
+        trigger: el,
+        start,
+        onEnter: addLayers,
+        onEnterBack: addLayers,
+        onLeave: dropLayers,
+        onLeaveBack: dropLayers,
+      },
     });
 
     return () => {
       tl?.scrollTrigger?.kill();
       tl?.kill();
+      dropLayers();
     };
   }, [delay, stagger, start, weightFrom, weightTo]);
 
@@ -74,7 +91,7 @@ export function RevealText({
       aria-hidden={splitBy === "char"}
     >
       <span
-        className="reveal-piece inline-block will-change-transform"
+        className="reveal-piece inline-block"
         style={{
           fontVariationSettings:
             typeof weightFrom === "number"

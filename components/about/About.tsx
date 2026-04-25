@@ -57,12 +57,10 @@ export function About() {
 
           <RevealText
             as="p"
-            splitBy="char"
-            stagger={0.004}
-            weightFrom={300}
-            weightTo={500}
+            splitBy="word"
+            stagger={0.018}
             delay={0.3}
-            className="max-w-xl text-pretty text-base leading-relaxed text-ink-soft md:text-lg"
+            className="max-w-xl text-pretty text-base font-medium leading-relaxed text-ink-soft md:text-lg"
             start="top 85%"
           >
             Based in Scottsdale, working with ambitious teams worldwide. I focus on motion, typography, and the small details that make a product feel considered. Tools are just tools — taste is the job.

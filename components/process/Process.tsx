@@ -146,7 +146,6 @@ export function Process() {
                     style={{
                       color: "#ddd9cb",
                       fontVariationSettings: '"wght" 800',
-                      willChange: "transform, font-variation-settings, opacity",
                     }}
                   >
                     {ch}

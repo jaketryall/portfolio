@@ -48,7 +48,6 @@ export const HeroNameBackdrop = forwardRef<HeroBackdropHandle, Props>(
           style={{
             color: "#e4e1d7",
             fontVariationSettings: '"wght" 800',
-            willChange: "transform, opacity",
           }}
         >
           {ch}

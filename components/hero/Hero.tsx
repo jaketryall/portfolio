@@ -95,10 +95,8 @@ export function Hero() {
         <div className="max-w-md">
           <RevealText
             as="p"
-            splitBy="char"
-            stagger={0.012}
-            weightFrom={300}
-            weightTo={500}
+            splitBy="word"
+            stagger={0.04}
             delay={1.1}
             className="text-pretty text-base leading-snug font-medium text-ink-soft md:text-lg"
           >
@@ -107,12 +105,10 @@ export function Hero() {
           <br />
           <RevealText
             as="span"
-            splitBy="char"
-            stagger={0.014}
-            weightFrom={400}
-            weightTo={700}
+            splitBy="word"
+            stagger={0.05}
             delay={1.4}
-            className="text-ink md:text-lg"
+            className="text-ink font-semibold md:text-lg"
           >
             I design interfaces that move.
           </RevealText>
