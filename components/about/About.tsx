@@ -4,6 +4,7 @@ import { RevealText } from "@/components/motion/RevealText";
 import { ToolsMarquee } from "./ToolsMarquee";
 import { Stats } from "./Stats";
 import { AboutGhostBackdrop } from "./AboutGhostBackdrop";
+import { SlabAtmosphere } from "@/components/atmosphere/SlabAtmosphere";
 
 export function About() {
   return (
@@ -18,6 +19,8 @@ export function About() {
           "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 0 0 1px rgba(14,14,14,0.05)",
       }}
     >
+      <SlabAtmosphere />
+
       {/* echoing ghost-text motif — tied to the hero's JAKE/RYALL backdrop */}
       <AboutGhostBackdrop />
 

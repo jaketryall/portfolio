@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { motionBus } from "@/lib/motionBus";
 import { MagneticButton } from "@/components/motion/MagneticButton";
+import { SlabAtmosphere } from "@/components/atmosphere/SlabAtmosphere";
 
 const EMAIL = "hello@jakeryall.com";
 
@@ -71,7 +72,9 @@ export function Footer() {
           "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 0 0 1px rgba(14,14,14,0.05)",
       }}
     >
-      <div className="mx-auto max-w-[1600px]">
+      <SlabAtmosphere />
+
+      <div className="relative mx-auto max-w-[1600px]">
         {/* CTA */}
         <div className="mb-20 flex flex-col items-start gap-10 md:mb-28 md:flex-row md:items-end md:justify-between">
           <div className="flex flex-col gap-6">

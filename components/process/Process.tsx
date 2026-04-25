@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { RevealText } from "@/components/motion/RevealText";
 import { revealLetters } from "@/lib/reveal";
+import { SlabAtmosphere } from "@/components/atmosphere/SlabAtmosphere";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -113,6 +114,8 @@ export function Process() {
           "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 0 0 1px rgba(14,14,14,0.05)",
       }}
     >
+      <SlabAtmosphere />
+
       <div className="contents">
         {/* ghost word — same motif as JAKE / RYALL / ABOUT / WORK */}
         <div
