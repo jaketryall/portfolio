@@ -3,6 +3,9 @@ import { Hero } from "@/components/hero/Hero";
 import { About } from "@/components/about/About";
 import { FloatingPortrait } from "@/components/hero/FloatingPortrait";
 import { WorkGrid } from "@/components/work/WorkGrid";
+import { Process } from "@/components/process/Process";
+import { Testimonials } from "@/components/testimonials/Testimonials";
+import { Footer } from "@/components/footer/Footer";
 
 export default function Home() {
   return (
@@ -20,9 +23,9 @@ export default function Home() {
       </div>
 
       <WorkGrid />
-
-      {/* Process, Testimonials, Footer — coming next */}
-      <div className="h-[40vh]" />
+      <Process />
+      <Testimonials />
+      <Footer />
     </>
   );
 }
