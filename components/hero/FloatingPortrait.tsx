@@ -224,13 +224,25 @@ export function FloatingPortrait({
       if (tw2.scrollTrigger) triggers.push(tw2.scrollTrigger);
     };
 
+    // setup runs on raf+timeout; then again after fonts/layout settle (300ms,
+    // 800ms) so the about slot's final position is measured correctly
+    // post-margin/padding shifts
     const raf = requestAnimationFrame(() => setTimeout(setup, 80));
-    const ro = new ResizeObserver(() => ScrollTrigger.refresh());
+    const t1 = window.setTimeout(setup, 300);
+    const t2 = window.setTimeout(setup, 900);
+
+    if ("fonts" in document) {
+      document.fonts.ready.then(() => setup());
+    }
+
+    const ro = new ResizeObserver(() => setup());
     ro.observe(document.body);
     window.addEventListener("resize", setup);
 
     return () => {
       cancelAnimationFrame(raf);
+      clearTimeout(t1);
+      clearTimeout(t2);
       window.removeEventListener("resize", setup);
       ro.disconnect();
       triggers.forEach((t) => t.kill());
