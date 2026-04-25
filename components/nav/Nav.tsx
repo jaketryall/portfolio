@@ -82,6 +82,18 @@ export function Nav() {
 
   return (
     <>
+      {/* Top fade mask — fades scroll content into the canvas color before
+          it reaches the nav, so big marquees / display text don't read
+          through the glass on mobile. */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-x-0 top-0 z-30 h-24 md:h-28"
+        style={{
+          background:
+            "linear-gradient(180deg, var(--color-canvas) 0%, var(--color-canvas) 55%, rgba(252,252,251,0) 100%)",
+        }}
+      />
+
       {/* TOP BAR — logo + availability pill (visible on all sizes) */}
       <header
         ref={rootRef}

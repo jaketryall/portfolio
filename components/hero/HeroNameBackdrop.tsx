@@ -68,7 +68,9 @@ export const HeroNameBackdrop = forwardRef<HeroBackdropHandle, Props>(
           fontWeight: 800,
           letterSpacing: "-0.06em",
           lineHeight: 0.8,
-          fontSize: "clamp(7rem, 26vw, 28rem)",
+          // Bumped min from 7rem so letters are wider than the portrait
+          // on mobile and visibly peek around its edges.
+          fontSize: "clamp(11rem, 26vw, 28rem)",
         }}
       >
         <span className="block overflow-hidden">

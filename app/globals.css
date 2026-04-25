@@ -51,6 +51,14 @@
     min-height: 100%;
   }
 
+  /* Reserve space at the bottom on mobile so the fixed nav dock doesn't
+   * cover page content. Desktop has no dock so no extra padding. */
+  @media (max-width: 767px) {
+    body {
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 5rem);
+    }
+  }
+
   ::selection {
     background: var(--color-ink);
     color: var(--color-canvas);
