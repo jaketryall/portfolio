@@ -1,14 +1,22 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { revealLetters } from "@/lib/reveal";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 /**
  * Echo of HeroNameBackdrop / AboutGhostBackdrop — the word "WORK" sits
- * behind the project grid as a section anchor. Same treatment, same motif.
+ * behind the project grid as a section anchor. Plus a parallax rise as
+ * the user approaches it, so the section transition feels earned.
  */
 export function WorkGhostBackdrop() {
   const rootRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
   const lettersRef = useRef<HTMLSpanElement[]>([]);
 
   useEffect(() => {
@@ -27,6 +35,32 @@ export function WorkGhostBackdrop() {
     };
   }, []);
 
+  // parallax rise — letters start lower and rise into position as user scrolls in
+  useEffect(() => {
+    const root = rootRef.current;
+    const inner = innerRef.current;
+    if (!root || !inner) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        inner,
+        { yPercent: 35 },
+        {
+          yPercent: -10,
+          ease: "none",
+          scrollTrigger: {
+            trigger: root,
+            start: "top bottom",
+            end: "top top",
+            scrub: 0.6,
+          },
+        }
+      );
+    }, root);
+    return () => ctx.revert();
+  }, []);
+
   return (
     <div
       ref={rootRef}
@@ -34,7 +68,7 @@ export function WorkGhostBackdrop() {
       className="pointer-events-none absolute inset-0 select-none"
       style={{ zIndex: 0 }}
     >
-      <div className="relative mx-auto h-full max-w-[1600px]">
+      <div className="relative mx-auto h-full max-w-[1600px]" ref={innerRef} style={{ willChange: "transform" }}>
         <div
           className="absolute right-0 top-32 overflow-hidden text-right md:top-40"
           style={{

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { revealLetters } from "@/lib/reveal";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -30,9 +31,28 @@ const ROTATE_MS = 6500;
 
 export function Testimonials() {
   const ref = useRef<HTMLElement>(null);
+  const ghostRef = useRef<HTMLDivElement>(null);
+  const ghostLettersRef = useRef<HTMLSpanElement[]>([]);
   const quoteRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
+
+  // ghost reveal
+  useEffect(() => {
+    const root = ghostRef.current;
+    if (!root) return;
+    const tl = revealLetters({
+      letters: ghostLettersRef.current,
+      weightFrom: 180,
+      weightTo: 800,
+      stagger: 0.05,
+      scrollTrigger: { trigger: root, start: "top 85%", once: true },
+    });
+    return () => {
+      tl?.scrollTrigger?.kill();
+      tl?.kill();
+    };
+  }, []);
 
   // auto-rotate
   useEffect(() => {
@@ -62,32 +82,81 @@ export function Testimonials() {
     <section
       ref={ref}
       aria-label="Testimonials"
-      className="relative px-6 py-28 md:px-12 md:py-40 lg:px-20"
+      className="relative overflow-hidden px-6 py-32 md:px-12 md:py-44 lg:px-20"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="mx-auto max-w-[1400px]">
-        <div className="mb-12 flex items-center gap-3">
-          <span aria-hidden className="inline-block h-px w-10 bg-ink" />
-          <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink font-semibold">
-            Words
-          </span>
-        </div>
-
-        <div ref={quoteRef} className="min-h-[260px] md:min-h-[320px]">
-          <blockquote
-            className="display-black max-w-5xl text-pretty text-ink"
+      {/* ghost word — same motif */}
+      <div
+        ref={ghostRef}
+        aria-hidden
+        className="pointer-events-none absolute inset-0 select-none"
+        style={{ zIndex: 0 }}
+      >
+        <div className="relative mx-auto h-full max-w-[1600px]">
+          <div
+            className="absolute left-0 top-32 overflow-hidden md:top-44"
             style={{
-              fontSize: "clamp(1.75rem, 3.6vw, 3.5rem)",
-              lineHeight: 1.1,
-              letterSpacing: "-0.03em",
+              width: "min(900px, 70%)",
+              fontFamily: "var(--font-sans)",
+              color: "#e4e1d7",
+              fontWeight: 800,
+              letterSpacing: "-0.07em",
+              lineHeight: 0.85,
+              fontSize: "clamp(5rem, 14vw, 13rem)",
             }}
           >
-            <span aria-hidden>“</span>
+            <span className="block overflow-hidden whitespace-nowrap">
+              {Array.from("WORDS").map((ch, i) => (
+                <span
+                  key={i}
+                  ref={(el) => {
+                    if (el) ghostLettersRef.current[i] = el;
+                  }}
+                  className="inline-block"
+                  style={{
+                    color: "#e4e1d7",
+                    fontVariationSettings: '"wght" 800',
+                    willChange: "transform, font-variation-settings, opacity",
+                  }}
+                >
+                  {ch}
+                </span>
+              ))}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative mx-auto max-w-[1400px]">
+        {/* Big decorative open quote */}
+        <span
+          aria-hidden
+          className="block leading-none text-ink"
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: "clamp(6rem, 14vw, 14rem)",
+            fontWeight: 800,
+            letterSpacing: "-0.05em",
+            transform: "translateY(0.15em)",
+          }}
+        >
+          “
+        </span>
+
+        <div ref={quoteRef} className="-mt-8 min-h-[260px] md:min-h-[300px]">
+          <blockquote
+            className="display max-w-5xl text-pretty text-ink"
+            style={{
+              fontSize: "clamp(1.65rem, 3.2vw, 3rem)",
+              lineHeight: 1.15,
+              letterSpacing: "-0.02em",
+              fontWeight: 600,
+            }}
+          >
             {current.body}
-            <span aria-hidden>”</span>
           </blockquote>
-          <div className="mt-10 flex items-center gap-4">
+          <div className="mt-12 flex items-center gap-4">
             <span aria-hidden className="inline-block h-px w-8 bg-ink" />
             <div>
               <div
@@ -95,7 +164,7 @@ export function Testimonials() {
                 style={{
                   fontFamily: "var(--font-sans)",
                   fontWeight: 700,
-                  fontSize: "0.95rem",
+                  fontSize: "1rem",
                   letterSpacing: "-0.01em",
                 }}
               >
@@ -108,24 +177,39 @@ export function Testimonials() {
           </div>
         </div>
 
-        {/* dots — click-to-jump + indicate active */}
+        {/* progress bars — visual anchor + click-to-jump */}
         <div className="mt-12 flex gap-2">
-          {QUOTES.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setActive(i)}
-              aria-label={`Show testimonial ${i + 1}`}
-              data-cursor="hover"
-              className="group relative h-1.5 w-12 overflow-hidden rounded-full bg-line"
-            >
-              <span
-                aria-hidden
-                className="absolute inset-y-0 left-0 bg-ink transition-[width] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
-                style={{ width: i === active ? "100%" : "0%" }}
-              />
-            </button>
-          ))}
+          {QUOTES.map((_, i) => {
+            const isActive = i === active;
+            return (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setActive(i)}
+                aria-label={`Show testimonial ${i + 1}`}
+                data-cursor="hover"
+                className="group relative h-1 w-20 overflow-hidden rounded-full bg-line transition-all hover:h-1.5"
+              >
+                <span
+                  aria-hidden
+                  className="absolute inset-y-0 left-0 origin-left bg-ink"
+                  key={`fill-${active}-${i}`}
+                  style={{
+                    width: "100%",
+                    transform: isActive
+                      ? "scaleX(1)"
+                      : i < active
+                      ? "scaleX(1)"
+                      : "scaleX(0)",
+                    transition: isActive
+                      ? `transform ${paused ? 0 : ROTATE_MS}ms linear`
+                      : "transform 0.3s",
+                    transformOrigin: "left center",
+                  }}
+                />
+              </button>
+            );
+          })}
         </div>
       </div>
     </section>

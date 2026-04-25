@@ -12,6 +12,80 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+/**
+ * Six distinct duotone/wash treatments. Each card pulls one based on its
+ * index so the same placeholder source image renders as visually unique
+ * compositions across the grid.
+ */
+const COVER_TREATMENTS = [
+  // 1. graphite + cream typeblock (Atlas)
+  {
+    bg: "#0e0e0e",
+    filter: "grayscale(1) contrast(1.05) brightness(0.55)",
+    blend: "luminosity" as const,
+    opacity: 0.55,
+    wash: "linear-gradient(135deg, rgba(14,14,14,0.55), rgba(14,14,14,0.15))",
+    titleColor: "#fcfcfb",
+    titleShadow: "none",
+    metaColor: "rgba(252,252,251,0.9)",
+  },
+  // 2. soft cream + sage tint (North)
+  {
+    bg: "#dbe6dc",
+    filter: "grayscale(0.7) contrast(0.95) brightness(1.05)",
+    blend: "multiply" as const,
+    opacity: 0.45,
+    wash: "linear-gradient(180deg, rgba(43,182,115,0.18), rgba(14,14,14,0.04))",
+    titleColor: "#0e0e0e",
+    titleShadow: "none",
+    metaColor: "#0e0e0e",
+  },
+  // 3. high-contrast b&w (Folio)
+  {
+    bg: "#fcfcfb",
+    filter: "grayscale(1) contrast(1.4) brightness(0.95)",
+    blend: "normal" as const,
+    opacity: 0.85,
+    wash: "linear-gradient(180deg, rgba(252,252,251,0.0) 60%, rgba(14,14,14,0.4))",
+    titleColor: "#fcfcfb",
+    titleShadow: "0 2px 30px rgba(14,14,14,0.45)",
+    metaColor: "#fcfcfb",
+  },
+  // 4. warm clay (Sundial)
+  {
+    bg: "#caa581",
+    filter: "grayscale(0.9) sepia(0.3) contrast(1) brightness(0.95)",
+    blend: "multiply" as const,
+    opacity: 0.65,
+    wash: "linear-gradient(135deg, rgba(202,165,129,0.35), rgba(14,14,14,0.18))",
+    titleColor: "#0e0e0e",
+    titleShadow: "none",
+    metaColor: "#0e0e0e",
+  },
+  // 5. cool slate (Orbit)
+  {
+    bg: "#1a2330",
+    filter: "grayscale(0.95) contrast(1.05) brightness(0.6)",
+    blend: "luminosity" as const,
+    opacity: 0.5,
+    wash: "linear-gradient(135deg, rgba(26,35,48,0.6), rgba(26,35,48,0.2))",
+    titleColor: "#fcfcfb",
+    titleShadow: "none",
+    metaColor: "rgba(252,252,251,0.9)",
+  },
+  // 6. paper-white minimal (Quill)
+  {
+    bg: "#f4f2ee",
+    filter: "grayscale(1) contrast(0.85) brightness(1.1)",
+    blend: "multiply" as const,
+    opacity: 0.35,
+    wash: "linear-gradient(180deg, rgba(244,242,238,0.0), rgba(14,14,14,0.06))",
+    titleColor: "#0e0e0e",
+    titleShadow: "none",
+    metaColor: "#0e0e0e",
+  },
+];
+
 type Props = {
   project: Project;
   /** index in the grid — used for offset stagger */
@@ -112,6 +186,7 @@ export function ProjectCard({ project, index }: Props) {
         style={{
           boxShadow:
             "0 30px 80px -30px rgba(14,14,14,0.22), inset 0 0 0 1px rgba(14,14,14,0.06)",
+          background: COVER_TREATMENTS[index % COVER_TREATMENTS.length].bg,
         }}
       >
         <div
@@ -128,14 +203,45 @@ export function ProjectCard({ project, index }: Props) {
             fill
             sizes="(min-width: 1024px) 45vw, 90vw"
             className="object-cover"
+            style={{
+              filter: COVER_TREATMENTS[index % COVER_TREATMENTS.length].filter,
+              mixBlendMode: COVER_TREATMENTS[index % COVER_TREATMENTS.length].blend,
+              opacity: COVER_TREATMENTS[index % COVER_TREATMENTS.length].opacity,
+            }}
           />
+        </div>
+        {/* tonal wash on top — varies per card */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 mix-blend-multiply"
+          style={{
+            background: COVER_TREATMENTS[index % COVER_TREATMENTS.length].wash,
+          }}
+        />
+        {/* big title overlay — visible until hover */}
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center p-8">
+          <span
+            aria-hidden
+            className="text-center"
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontWeight: 800,
+              fontSize: "clamp(2.5rem, 4.5vw, 4.5rem)",
+              letterSpacing: "-0.04em",
+              lineHeight: 0.9,
+              color: COVER_TREATMENTS[index % COVER_TREATMENTS.length].titleColor,
+              textShadow: COVER_TREATMENTS[index % COVER_TREATMENTS.length].titleShadow,
+            }}
+          >
+            {project.title.split(" — ")[0]}
+          </span>
         </div>
         {/* meta strip — bottom of card */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between px-5 py-4">
-          <span className="font-mono text-[11px] tracking-[0.18em] uppercase text-canvas/90 font-semibold">
+          <span className="font-mono text-[11px] tracking-[0.18em] uppercase font-semibold" style={{ color: COVER_TREATMENTS[index % COVER_TREATMENTS.length].metaColor }}>
             {project.year}
           </span>
-          <span className="font-mono text-[11px] tracking-[0.18em] uppercase text-canvas/90 font-semibold">
+          <span className="font-mono text-[11px] tracking-[0.18em] uppercase font-semibold" style={{ color: COVER_TREATMENTS[index % COVER_TREATMENTS.length].metaColor }}>
             {project.role}
           </span>
         </div>

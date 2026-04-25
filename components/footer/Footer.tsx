@@ -70,12 +70,6 @@ export function Footer() {
         {/* CTA */}
         <div className="mb-20 flex flex-col items-start gap-10 md:mb-28 md:flex-row md:items-end md:justify-between">
           <div className="flex flex-col gap-6">
-            <div className="flex items-center gap-3">
-              <span aria-hidden className="inline-block h-px w-10 bg-ink" />
-              <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink font-semibold">
-                Let&rsquo;s build something
-              </span>
-            </div>
             <h2
               className="display-black max-w-3xl text-ink"
               style={{ fontSize: "clamp(2.25rem, 5vw, 4.75rem)" }}
@@ -123,9 +117,6 @@ export function Footer() {
               </a>
             ))}
           </div>
-          <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink-soft font-semibold">
-            Available · Q3 2026
-          </span>
         </div>
       </div>
 
