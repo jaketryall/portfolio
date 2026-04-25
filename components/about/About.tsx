@@ -15,12 +15,12 @@ export function About() {
       className="relative mt-16 overflow-hidden rounded-t-[32px] rounded-b-[32px] px-6 pt-32 pb-32 md:mt-24 md:rounded-t-[56px] md:rounded-b-[56px] md:px-12 md:pt-44 md:pb-44 lg:px-20"
       style={{
         background: "var(--color-canvas-2)",
-        // soften the top edge so the canvas → canvas-2 boundary isn't a hard
-        // hairline at the rounded corner
+        // soften the top + bottom edges so the rounded corner curve fully
+        // dissolves into canvas — no visible arc/line at the boundary
         maskImage:
-          "linear-gradient(180deg, transparent 0px, black 40px, black calc(100% - 40px), transparent 100%)",
+          "linear-gradient(180deg, transparent 0px, black 140px, black calc(100% - 140px), transparent 100%)",
         WebkitMaskImage:
-          "linear-gradient(180deg, transparent 0px, black 40px, black calc(100% - 40px), transparent 100%)",
+          "linear-gradient(180deg, transparent 0px, black 140px, black calc(100% - 140px), transparent 100%)",
       }}
     >
       <SlabAtmosphere />
