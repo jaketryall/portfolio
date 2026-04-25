@@ -50,7 +50,7 @@ export function Stats() {
   }, []);
 
   return (
-    <div ref={ref} className="grid grid-cols-3 gap-6 pt-8">
+    <div ref={ref} className="grid grid-cols-3 gap-6 border-t border-line pt-8">
       {STATS.map((s, i) => (
         <div key={s.label} className="flex flex-col items-start gap-3">
           <span
