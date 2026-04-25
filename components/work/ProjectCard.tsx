@@ -93,12 +93,30 @@ export function ProjectCard({ project, index }: Props) {
   // alternate column offset for staggered grid feel (azizkhaldi inspiration)
   const offsetClass = index % 2 === 1 ? "md:translate-y-40" : "";
 
+  // guard against rapid clicks during an in-flight view transition (or
+  // mid-entrance animation) — both can route to the wrong target
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (typeof document !== "undefined") {
+      // if a previous transition is still active, prevent this click
+      const navigating = document.body.dataset.navigating === "true";
+      if (navigating) {
+        e.preventDefault();
+        return;
+      }
+      document.body.dataset.navigating = "true";
+      window.setTimeout(() => {
+        delete document.body.dataset.navigating;
+      }, 800);
+    }
+  };
+
   return (
     <Link
       ref={cardRef}
       href={`/work/${project.slug}`}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
+      onClick={handleClick}
       data-cursor="view"
       data-cursor-label="VIEW"
       className={cn(
