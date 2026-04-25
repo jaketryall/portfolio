@@ -51,17 +51,17 @@ export function SlabAtmosphere() {
       <div
         data-shape
         data-depth="0.7"
-        className="absolute top-[-20%] left-[-10%] h-[55vmax] w-[55vmax] rounded-full opacity-50 blur-[100px]"
+        className="absolute top-[-20%] left-[-10%] h-[55vmax] w-[55vmax] rounded-full opacity-60 blur-[100px]"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(255,255,255,0.95), rgba(255,255,255,0) 70%)",
+            "radial-gradient(closest-side, rgba(220,215,200,0.9), rgba(220,215,200,0) 70%)",
           willChange: "transform",
         }}
       />
       <div
         data-shape
         data-depth="0.4"
-        className="absolute bottom-[-15%] right-[-15%] h-[60vmax] w-[60vmax] rounded-full opacity-40 blur-[120px]"
+        className="absolute bottom-[-15%] right-[-15%] h-[60vmax] w-[60vmax] rounded-full opacity-45 blur-[120px]"
         style={{
           background:
             "radial-gradient(closest-side, rgba(220,215,200,0.85), rgba(220,215,200,0) 70%)",
@@ -74,7 +74,7 @@ export function SlabAtmosphere() {
         className="absolute top-[30%] left-[40%] h-[40vmax] w-[40vmax] rounded-full opacity-35 blur-[120px]"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(255,255,255,0.7), rgba(255,255,255,0) 70%)",
+            "radial-gradient(closest-side, rgba(220,215,200,0.7), rgba(220,215,200,0) 70%)",
           willChange: "transform",
         }}
       />
