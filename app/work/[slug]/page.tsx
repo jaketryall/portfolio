@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import type { Metadata } from "next";
 import { getAllSlugs, getProjectBySlug } from "@/lib/projects";
-import { getCoverTreatmentForSlug } from "@/lib/coverTreatments";
+import { getCoverTreatmentForSlug } from "@/lib/coverTreatments.server";
 import { CaseStudyHero } from "@/components/work/CaseStudyHero";
 import { NextProject } from "@/components/work/NextProject";
 import { caseStudyMdxComponents } from "./mdx-components";

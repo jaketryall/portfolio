@@ -1,10 +1,12 @@
 /**
- * Per-project duotone/wash treatments. Used by both ProjectCard (in the
- * grid) and CaseStudyHero (on the detail page) so that the cover image
- * looks identical at the start and end of the view-transition morph.
+ * Per-project duotone/wash treatments. Pure data — safe to import from
+ * client components. Used by both ProjectCard (in the grid) and
+ * CaseStudyHero (on the detail page) so that the cover image looks
+ * identical at the start and end of the view-transition morph.
+ *
+ * For slug-based lookup (server-only, depends on lib/projects.ts), see
+ * lib/coverTreatments.server.ts.
  */
-
-import { getAllProjects } from "@/lib/projects";
 
 export type CoverTreatment = {
   bg: string;
@@ -85,13 +87,3 @@ export const COVER_TREATMENTS: CoverTreatment[] = [
     metaColor: "#0e0e0e",
   },
 ];
-
-/** Look up a project's cover treatment by slug — based on its index in the
- *  sorted projects list. Used so a cover renders identically on the home
- *  card and on the case study hero, making the view-transition morph
- *  visually continuous. */
-export function getCoverTreatmentForSlug(slug: string): CoverTreatment {
-  const projects = getAllProjects();
-  const idx = projects.findIndex((p) => p.slug === slug);
-  return COVER_TREATMENTS[(idx >= 0 ? idx : 0) % COVER_TREATMENTS.length];
-}
