@@ -46,7 +46,7 @@ export function AtmosphereLayer() {
       <div
         data-shape
         data-depth="0.6"
-        className="absolute top-[10%] left-[-15%] h-[55vmax] w-[55vmax] rounded-full opacity-60 blur-[80px]"
+        className="absolute top-[10%] left-[-15%] h-[35vmax] w-[35vmax] rounded-full opacity-60 blur-[50px]"
         style={{
           background:
             "radial-gradient(closest-side, rgba(220,215,200,0.9), rgba(220,215,200,0) 70%)",
@@ -56,7 +56,7 @@ export function AtmosphereLayer() {
       <div
         data-shape
         data-depth="0.35"
-        className="absolute top-[40%] right-[-20%] h-[60vmax] w-[60vmax] rounded-full opacity-45 blur-[100px]"
+        className="absolute top-[40%] right-[-20%] h-[40vmax] w-[40vmax] rounded-full opacity-45 blur-[60px]"
         style={{
           background:
             "radial-gradient(closest-side, rgba(220,215,200,0.9), rgba(220,215,200,0) 70%)",
@@ -66,7 +66,7 @@ export function AtmosphereLayer() {
       <div
         data-shape
         data-depth="0.8"
-        className="absolute bottom-[-10%] left-[30%] h-[45vmax] w-[45vmax] rounded-full opacity-35 blur-[120px]"
+        className="absolute bottom-[-10%] left-[30%] h-[30vmax] w-[30vmax] rounded-full opacity-35 blur-[70px]"
         style={{
           background:
             "radial-gradient(closest-side, rgba(220,215,200,0.7), rgba(220,215,200,0) 70%)",
