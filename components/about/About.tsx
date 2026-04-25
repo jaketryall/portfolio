@@ -4,7 +4,6 @@ import { RevealText } from "@/components/motion/RevealText";
 import { ToolsMarquee } from "./ToolsMarquee";
 import { Stats } from "./Stats";
 import { AboutGhostBackdrop } from "./AboutGhostBackdrop";
-import { SlabAtmosphere } from "@/components/atmosphere/SlabAtmosphere";
 
 export function About() {
   return (
@@ -12,13 +11,15 @@ export function About() {
       id="about"
       data-section="about"
       aria-label="About"
-      className="relative mt-16 overflow-hidden rounded-t-[32px] rounded-b-[32px] px-6 pt-32 pb-32 md:mt-24 md:rounded-t-[56px] md:rounded-b-[56px] md:px-12 md:pt-44 md:pb-44 lg:px-20"
+      className="relative mt-16 rounded-t-[32px] px-6 pt-32 pb-20 md:mt-24 md:rounded-t-[56px] md:px-12 md:pt-44 md:pb-32 lg:px-20"
       style={{
-        background: "var(--color-canvas-2)",
+        // No tonal background — canvas + global atmosphere flow through.
+        // The rounded-top corners are just a "lip" that the inset shadow
+        // traces, suggesting a section boundary without breaking the gradient.
+        boxShadow:
+          "inset 0 1px 0 rgba(14,14,14,0.06)",
       }}
     >
-      <SlabAtmosphere />
-
       {/* echoing ghost-text motif — tied to the hero's JAKE/RYALL backdrop */}
       <AboutGhostBackdrop />
 
