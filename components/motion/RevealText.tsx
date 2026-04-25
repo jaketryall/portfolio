@@ -58,6 +58,11 @@ export function RevealText({
     <span
       key={idx}
       className="inline-block overflow-hidden align-bottom"
+      style={{
+        // breathing room so ascenders/caps/diacritics aren't clipped by the mask
+        paddingTop: "0.3em",
+        marginTop: "-0.3em",
+      }}
       aria-hidden={splitBy === "char"}
     >
       <span
