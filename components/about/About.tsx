@@ -13,10 +13,7 @@ export function About() {
       aria-label="About"
       className="relative overflow-hidden rounded-t-[32px] px-6 pt-32 pb-32 md:rounded-t-[56px] md:px-12 md:pt-44 md:pb-44 lg:px-20"
       style={{
-        background: "transparent",
-        // subtle inset border traces the rounded corner shape so the curve
-        // is visible even though the slab has no tonal fill — atmosphere
-        // shows through uniformly with no corner-cutout contrast
+        background: "rgba(244, 242, 238, 0.55)",
         boxShadow: "inset 0 1px 0 rgba(14,14,14,0.06)",
       }}
     >
