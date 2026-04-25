@@ -107,7 +107,7 @@ export function Process() {
       id="process"
       data-section="process"
       aria-label="Process"
-      className="relative -mt-16 overflow-hidden rounded-t-[32px] rounded-b-[32px] px-6 py-24 md:-mt-24 md:rounded-t-[56px] md:rounded-b-[56px] md:px-12 md:py-40 lg:px-20"
+      className="relative mt-24 overflow-hidden rounded-t-[32px] rounded-b-[32px] px-6 py-24 md:mt-40 md:rounded-t-[56px] md:rounded-b-[56px] md:px-12 md:py-40 lg:px-20"
       style={{
         background: "var(--color-canvas-2)",
       }}
