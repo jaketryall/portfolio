@@ -10,15 +10,18 @@ if (typeof window !== "undefined") {
 }
 
 /**
- * Echo of HeroNameBackdrop / AboutGhostBackdrop — the word "WORK" sits
- * behind the project grid as a section anchor. Plus a parallax rise as
- * the user approaches it, so the section transition feels earned.
+ * Echo of HeroNameBackdrop / AboutGhostBackdrop. The word "WORK" rises out
+ * of the About section and lands behind the WorkGrid header as the section
+ * docks. The cohesion handoff between About → Work — same idea as the
+ * shared FloatingPortrait between Hero → About, expressed as a typographic
+ * element traveling between sections.
  */
 export function WorkGhostBackdrop() {
   const rootRef = useRef<HTMLDivElement>(null);
-  const innerRef = useRef<HTMLDivElement>(null);
+  const ghostRef = useRef<HTMLDivElement>(null);
   const lettersRef = useRef<HTMLSpanElement[]>([]);
 
+  // letter reveal — fires once when the ghost target is in view
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
@@ -35,25 +38,34 @@ export function WorkGhostBackdrop() {
     };
   }, []);
 
-  // parallax rise — letters start lower and rise into position as user scrolls in
+  // scroll-driven rise — ghost element starts overflowing UP into the About
+  // visual area (top: -100vh) and tweens down to its target top position as
+  // user scrolls from late-About into docked-Work.
   useEffect(() => {
     const root = rootRef.current;
-    const inner = innerRef.current;
-    if (!root || !inner) return;
+    const ghost = ghostRef.current;
+    if (!root || !ghost) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
+    if (reduce) {
+      gsap.set(ghost, { top: "11rem" });
+      return;
+    }
+
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        inner,
-        { yPercent: 35 },
+        ghost,
+        { top: "-100vh" },
         {
-          yPercent: -10,
+          top: "11rem",
           ease: "none",
           scrollTrigger: {
             trigger: root,
-            start: "top bottom",
+            // begin while user is still scrolling through About
+            start: "top 200%",
+            // settle by the time WorkGrid docks at the viewport top
             end: "top top",
-            scrub: 0.6,
+            scrub: 0.8,
+            invalidateOnRefresh: true,
           },
         }
       );
@@ -68,10 +80,12 @@ export function WorkGhostBackdrop() {
       className="pointer-events-none absolute inset-0 select-none"
       style={{ zIndex: 0 }}
     >
-      <div className="relative mx-auto h-full max-w-[1600px]" ref={innerRef} style={{ willChange: "transform" }}>
+      <div className="relative mx-auto h-full max-w-[1600px]">
         <div
-          className="absolute right-0 top-44 overflow-hidden text-right md:top-56"
+          ref={ghostRef}
+          className="absolute right-0 overflow-hidden text-right"
           style={{
+            top: "-100vh",
             width: "min(700px, 55%)",
             fontFamily: "var(--font-sans)",
             color: "#e4e1d7",
@@ -79,6 +93,7 @@ export function WorkGhostBackdrop() {
             letterSpacing: "-0.07em",
             lineHeight: 0.85,
             fontSize: "clamp(5rem, 14vw, 13rem)",
+            willChange: "top",
           }}
         >
           <span className="block overflow-hidden whitespace-nowrap">

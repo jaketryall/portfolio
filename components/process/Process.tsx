@@ -107,7 +107,10 @@ export function Process() {
       data-section="process"
       aria-label="Process"
       className="relative overflow-hidden px-6 py-32 md:px-12 md:py-48 lg:px-20"
-      style={{ background: "var(--color-canvas-2)" }}
+      style={{
+        background:
+          "linear-gradient(180deg, var(--color-canvas) 0%, var(--color-canvas-2) 12%, var(--color-canvas-2) 88%, var(--color-canvas) 100%)",
+      }}
     >
       {/* ghost word — same motif as JAKE / RYALL / ABOUT / WORK */}
       <div
