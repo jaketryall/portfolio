@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { motionBus } from "@/lib/motionBus";
 import { MagneticButton } from "@/components/motion/MagneticButton";
-import { SlabAtmosphere } from "@/components/atmosphere/SlabAtmosphere";
 
 const EMAIL = "hello@jakeryall.com";
 
@@ -67,11 +66,11 @@ export function Footer() {
       aria-label="Contact"
       className="relative -mt-16 overflow-hidden rounded-t-[32px] px-6 pb-10 pt-32 md:-mt-24 md:rounded-t-[56px] md:px-12 md:pb-12 md:pt-44 lg:px-20"
       style={{
-        background: "var(--color-canvas-2)",
+        background: "rgba(244, 242, 238, 0.4)",
+        boxShadow:
+          "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 0 0 1px rgba(14,14,14,0.05)",
       }}
     >
-      <SlabAtmosphere />
-
       <div className="relative mx-auto max-w-[1600px]">
         {/* CTA */}
         <div className="mb-20 flex flex-col items-start gap-10 md:mb-28 md:flex-row md:items-end md:justify-between">
