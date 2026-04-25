@@ -164,7 +164,7 @@ export function ProjectCard({ project, index }: Props) {
   };
 
   // alternate column offset for staggered grid feel (azizkhaldi inspiration)
-  const offsetClass = index % 2 === 1 ? "md:translate-y-24" : "";
+  const offsetClass = index % 2 === 1 ? "md:translate-y-40" : "";
 
   return (
     <Link

@@ -71,8 +71,8 @@ export function Footer() {
         <div className="mb-20 flex flex-col items-start gap-10 md:mb-28 md:flex-row md:items-end md:justify-between">
           <div className="flex flex-col gap-6">
             <h2
-              className="display-black max-w-3xl text-ink"
-              style={{ fontSize: "clamp(2.25rem, 5vw, 4.75rem)" }}
+              className="display-black max-w-4xl text-ink"
+              style={{ fontSize: "clamp(2.5rem, 6vw, 6rem)" }}
             >
               Have a project in mind? <br />
               <span className="text-ink-soft">Let&rsquo;s talk.</span>
@@ -85,7 +85,7 @@ export function Footer() {
               href={`mailto:${EMAIL}`}
               data-cursor="view"
               data-cursor-label="WRITE"
-              className="rounded-full bg-ink px-7 py-4 font-mono text-[12px] tracking-[0.2em] uppercase text-canvas font-semibold"
+              className="rounded-full bg-ink px-8 py-5 font-mono text-[13px] tracking-[0.2em] uppercase text-canvas font-semibold"
             >
               {EMAIL}
             </MagneticButton>
@@ -93,9 +93,14 @@ export function Footer() {
               type="button"
               onClick={handleCopy}
               data-cursor="hover"
-              className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink-soft hover:text-ink font-semibold"
+              className="nav-link relative inline-flex overflow-hidden font-mono text-[11px] tracking-[0.2em] uppercase text-ink-soft hover:text-ink font-semibold"
             >
-              {copied ? "Copied ✓" : "Copy email"}
+              <span className="nav-link-inner">
+                {copied ? "Copied ✓" : "Copy email"}
+              </span>
+              <span className="nav-link-clone">
+                {copied ? "Copied ✓" : "Copy email"}
+              </span>
             </button>
           </div>
         </div>

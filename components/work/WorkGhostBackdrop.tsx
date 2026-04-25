@@ -70,7 +70,7 @@ export function WorkGhostBackdrop() {
     >
       <div className="relative mx-auto h-full max-w-[1600px]" ref={innerRef} style={{ willChange: "transform" }}>
         <div
-          className="absolute right-0 top-32 overflow-hidden text-right md:top-40"
+          className="absolute right-0 top-44 overflow-hidden text-right md:top-56"
           style={{
             width: "min(700px, 55%)",
             fontFamily: "var(--font-sans)",

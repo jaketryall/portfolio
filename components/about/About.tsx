@@ -34,7 +34,7 @@ export function About() {
               className="inline-block h-px w-10 bg-ink"
             />
             <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink font-semibold">
-              About
+              5 yrs designing · Scottsdale, AZ
             </span>
           </div>
 

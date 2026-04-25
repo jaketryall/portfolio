@@ -49,7 +49,7 @@ export function AtmosphereLayer() {
         className="absolute top-[10%] left-[-15%] h-[55vmax] w-[55vmax] rounded-full opacity-60 blur-[80px]"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(244,242,238,0.9), rgba(244,242,238,0) 70%)",
+            "radial-gradient(closest-side, rgba(220,215,200,0.9), rgba(220,215,200,0) 70%)",
           willChange: "transform",
         }}
       />
@@ -59,7 +59,7 @@ export function AtmosphereLayer() {
         className="absolute top-[40%] right-[-20%] h-[60vmax] w-[60vmax] rounded-full opacity-45 blur-[100px]"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(244,242,238,0.9), rgba(244,242,238,0) 70%)",
+            "radial-gradient(closest-side, rgba(220,215,200,0.9), rgba(220,215,200,0) 70%)",
           willChange: "transform",
         }}
       />
@@ -69,7 +69,7 @@ export function AtmosphereLayer() {
         className="absolute bottom-[-10%] left-[30%] h-[45vmax] w-[45vmax] rounded-full opacity-35 blur-[120px]"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(244,242,238,0.7), rgba(244,242,238,0) 70%)",
+            "radial-gradient(closest-side, rgba(220,215,200,0.7), rgba(220,215,200,0) 70%)",
           willChange: "transform",
         }}
       />

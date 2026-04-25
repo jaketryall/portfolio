@@ -50,12 +50,9 @@ export function Stats() {
   }, []);
 
   return (
-    <div
-      ref={ref}
-      className="grid grid-cols-3 gap-6 border-t border-line pt-8"
-    >
-      {STATS.map((s) => (
-        <div key={s.label} className="flex flex-col items-start gap-1">
+    <div ref={ref} className="grid grid-cols-3 gap-6 border-t border-line pt-8">
+      {STATS.map((s, i) => (
+        <div key={s.label} className="flex flex-col items-start gap-3">
           <span
             className="font-sans text-ink tabular-nums"
             style={{
@@ -63,13 +60,26 @@ export function Stats() {
               fontWeight: 500,
               letterSpacing: "-0.04em",
               lineHeight: 1,
-              fontVariationSettings: '"wght" 600',
+              fontVariationSettings: '"wght" 700',
             }}
           >
             <span data-num={s.value}>0</span>
             {s.suffix ?? ""}
           </span>
-          <span className="meta">{s.label}</span>
+          <span className="flex items-center gap-2">
+            <span
+              aria-hidden
+              className="inline-block h-1.5 w-1.5 rounded-full bg-ink"
+            />
+            <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-ink-soft font-semibold">
+              {s.label}
+            </span>
+            <span aria-hidden className="meta-spacer hidden md:inline-block">
+              {i < 2 ? (
+                <span className="ml-2 inline-block h-px w-6 bg-line" />
+              ) : null}
+            </span>
+          </span>
         </div>
       ))}
     </div>

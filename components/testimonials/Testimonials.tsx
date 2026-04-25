@@ -129,13 +129,28 @@ export function Testimonials() {
       </div>
 
       <div className="relative mx-auto max-w-[1400px]">
+        <div className="mb-12 flex flex-col gap-8">
+          <div className="flex items-center gap-3">
+            <span aria-hidden className="inline-block h-px w-10 bg-ink" />
+            <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-ink font-semibold">
+              Words
+            </span>
+          </div>
+          <h2
+            className="display-black max-w-3xl text-ink"
+            style={{ fontSize: "clamp(2.25rem, 4vw, 4rem)" }}
+          >
+            What clients say.
+          </h2>
+        </div>
+
         {/* Big decorative open quote */}
         <span
           aria-hidden
           className="block leading-none text-ink"
           style={{
             fontFamily: "var(--font-sans)",
-            fontSize: "clamp(6rem, 14vw, 14rem)",
+            fontSize: "clamp(5rem, 10vw, 10rem)",
             fontWeight: 800,
             letterSpacing: "-0.05em",
             transform: "translateY(0.15em)",

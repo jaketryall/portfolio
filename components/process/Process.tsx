@@ -15,21 +15,25 @@ const STEPS = [
     n: "01",
     title: "Discover",
     body: "Workshops, references, audits. Everything I need to understand the brief and where the bar should sit.",
+    duration: "1 week",
   },
   {
     n: "02",
     title: "Design",
     body: "Type system, color, motion language, layouts. Decisions made in Figma and prototypes, not waterfall reviews.",
+    duration: "2–3 weeks",
   },
   {
     n: "03",
     title: "Build",
     body: "I ship the design. Next.js, Tailwind, GSAP. Pixel-grade attention from production code, not hand-off.",
+    duration: "4–8 weeks",
   },
   {
     n: "04",
     title: "Refine",
     body: "Two weeks of polish after launch. Real data, real performance, real iteration based on what's actually shipping.",
+    duration: "2 weeks +",
   },
 ];
 
@@ -177,7 +181,7 @@ export function Process() {
           />
 
           <div className="relative grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-            {STEPS.map((s, i) => (
+            {STEPS.map((s) => (
               <article
                 key={s.n}
                 data-process-card
@@ -228,13 +232,13 @@ export function Process() {
                 <p className="text-pretty text-base font-medium leading-relaxed text-ink-soft">
                   {s.body}
                 </p>
-                {/* corner arrow that draws on hover */}
+                {/* duration micro-label */}
                 <span
                   aria-hidden
                   className="mt-2 inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.18em] uppercase text-ink-soft font-semibold transition-transform duration-500 group-hover:translate-x-1"
                 >
                   <span className="inline-block h-px w-6 bg-ink-soft transition-all duration-500 group-hover:w-10" />
-                  Step {i + 1}
+                  {s.duration}
                 </span>
               </article>
             ))}
