@@ -74,7 +74,7 @@ export default function ContactPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 data-cursor="hover"
-                className="nav-link relative inline-flex overflow-hidden font-mono text-[12px] tracking-[0.18em] uppercase text-ink font-semibold"
+                className="nav-link relative inline-flex overflow-hidden py-2 font-mono text-[12px] tracking-[0.18em] uppercase text-ink font-semibold"
               >
                 <span className="nav-link-inner">{s.label}</span>
                 <span className="nav-link-clone">{s.label}</span>
