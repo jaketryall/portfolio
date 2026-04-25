@@ -106,17 +106,14 @@ export function Process() {
       id="process"
       data-section="process"
       aria-label="Process"
-      className="relative px-3 py-20 md:px-6 md:py-32 lg:px-10"
+      className="relative -mt-16 overflow-hidden rounded-t-[32px] rounded-b-[32px] px-6 py-24 md:-mt-24 md:rounded-t-[56px] md:rounded-b-[56px] md:px-12 md:py-40 lg:px-20"
+      style={{
+        background: "var(--color-canvas-2)",
+        boxShadow:
+          "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 0 0 1px rgba(14,14,14,0.05)",
+      }}
     >
-      {/* rounded slab — tonal canvas-2 container with soft inner shadow */}
-      <div
-        className="relative overflow-hidden rounded-[28px] px-6 py-24 md:rounded-[40px] md:px-12 md:py-40 lg:px-20"
-        style={{
-          background: "var(--color-canvas-2)",
-          boxShadow:
-            "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 0 0 1px rgba(14,14,14,0.05)",
-        }}
-      >
+      <div className="contents">
         {/* ghost word — same motif as JAKE / RYALL / ABOUT / WORK */}
         <div
           ref={ghostRef}
