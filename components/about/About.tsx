@@ -14,7 +14,7 @@ export function About() {
       aria-label="About"
       className="relative overflow-hidden px-6 pt-32 pb-32 md:px-12 md:pt-44 md:pb-44 lg:px-20"
       style={{
-        background: "var(--color-canvas-2)",
+        background: "rgba(244, 242, 238, 0.55)",
       }}
     >
       <SlabAtmosphere />
