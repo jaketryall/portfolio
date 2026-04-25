@@ -40,7 +40,7 @@ export function About() {
 
           <h2
             className="display-black text-ink"
-            style={{ fontSize: "clamp(2.25rem, 4.2vw, 4rem)" }}
+            style={{ fontSize: "clamp(2.5rem, 5vw, 4.5rem)" }}
           >
             <RevealText
               as="span"
@@ -52,18 +52,6 @@ export function About() {
               start="top 85%"
             >
               Hey — I&rsquo;m Jake.
-            </RevealText>
-            <RevealText
-              as="span"
-              splitBy="char"
-              stagger={0.012}
-              weightFrom={200}
-              weightTo={800}
-              delay={0.15}
-              className="block text-ink-soft"
-              start="top 85%"
-            >
-              I design interfaces that move.
             </RevealText>
           </h2>
 
