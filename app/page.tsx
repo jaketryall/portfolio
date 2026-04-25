@@ -2,14 +2,13 @@ import { AtmosphereLayer } from "@/components/atmosphere/AtmosphereLayer";
 import { Hero } from "@/components/hero/Hero";
 import { About } from "@/components/about/About";
 import { FloatingPortrait } from "@/components/hero/FloatingPortrait";
+import { WorkGrid } from "@/components/work/WorkGrid";
 
 export default function Home() {
   return (
     <>
       <AtmosphereLayer />
 
-      {/* Shared portrait scrub wrapper — the FloatingPortrait lives inside,
-          physically travels between Hero and About slots as you scroll. */}
       <div data-portrait-scrub="true" className="relative">
         <FloatingPortrait
           heroSrc="/images/hero-source.jpg"
@@ -20,8 +19,10 @@ export default function Home() {
         <About />
       </div>
 
-      {/* Work, Process, Testimonials, Footer — coming in later phases */}
-      <div className="h-[60vh]" />
+      <WorkGrid />
+
+      {/* Process, Testimonials, Footer — coming next */}
+      <div className="h-[40vh]" />
     </>
   );
 }
